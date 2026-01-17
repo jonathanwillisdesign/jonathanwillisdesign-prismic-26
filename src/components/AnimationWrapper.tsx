@@ -56,17 +56,21 @@ export function AnimationWrapper({
     variantStyles[`${variant}Animated` as keyof typeof variantStyles];
   const delayStyle = delayStyles[delay];
 
+  const stylexProps = stylex.props(
+    baseStyle,
+    delayStyle,
+    scrollTrigger && isVisible && animatedStyle,
+    !scrollTrigger && hasMounted && animatedStyle, // animate after mount (no observer)
+    style,
+  );
+
   return (
     <div
       ref={scrollTrigger ? ref : undefined}
-      {...stylex.props(
-        baseStyle,
-        delayStyle,
-        scrollTrigger && isVisible && animatedStyle,
-        !scrollTrigger && hasMounted && animatedStyle, // animate after mount (no observer)
-        style,
-      )}
-      className={className}
+      {...stylexProps}
+      className={
+        className ? `${stylexProps.className ?? ""} ${className}` : stylexProps.className
+      }
     >
       {children}
     </div>
