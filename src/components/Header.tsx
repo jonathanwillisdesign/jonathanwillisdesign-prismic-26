@@ -72,6 +72,9 @@ const headerStyles = stylex.create({
       outline: "none",
       boxShadow: "none",
       WebkitTapHighlightColor: "transparent",
+      appearance: "none",
+      WebkitAppearance: "none",
+      MozAppearance: "none",
       ":hover": {
         opacity: 0.7,
       },
