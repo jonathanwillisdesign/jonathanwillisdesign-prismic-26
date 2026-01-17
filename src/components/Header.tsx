@@ -3,6 +3,7 @@
 import { useState } from "react";
 import * as stylex from "@stylexjs/stylex";
 import { Dialog } from "@base-ui/react/dialog";
+import { List, X } from "@phosphor-icons/react";
 import { PrismicNextLink } from "@prismicio/next";
 import { colors, spacing } from "@/styles/theme.stylex";
 
@@ -87,23 +88,10 @@ const headerStyles = stylex.create({
       },
     },
   },
-  burgerIcon: {
+  icon: {
     width: "24px",
     height: "24px",
     display: "block",
-    overflow: "visible",
-  },
-  burgerCircle: {
-    transformOrigin: "center",
-    transformBox: "fill-box",
-    transform: "scale(1)",
-    opacity: 0.85,
-    transition:
-      "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-  },
-  burgerCircleOpen: {
-    transform: "scale(2.6)",
-    opacity: 1,
   },
   dialogBackdrop: {
     display: "none",
@@ -211,23 +199,11 @@ export default function Header() {
             type="button"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              focusable="false"
-              {...stylex.props(headerStyles.burgerIcon)}
-            >
-              <circle
-                cx="12"
-                cy="12"
-                r="4"
-                fill="currentColor"
-                {...stylex.props(
-                  headerStyles.burgerCircle,
-                  isMenuOpen && headerStyles.burgerCircleOpen,
-                )}
-              />
-            </svg>
+            {isMenuOpen ? (
+              <X aria-hidden="true" {...stylex.props(headerStyles.icon)} />
+            ) : (
+              <List aria-hidden="true" {...stylex.props(headerStyles.icon)} />
+            )}
           </Dialog.Trigger>
 
           <Dialog.Portal>
