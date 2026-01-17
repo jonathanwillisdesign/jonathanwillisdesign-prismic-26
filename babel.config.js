@@ -1,19 +1,19 @@
-const path = require('path');
-const dev = process.env.NODE_ENV !== 'production';
+const path = require("path");
+const dev = process.env.NODE_ENV !== "production";
 
 module.exports = {
-  presets: ['next/babel'],
+  presets: ["next/babel"],
   plugins: [
     [
-      '@stylexjs/babel-plugin',
+      "@stylexjs/babel-plugin",
       {
         dev,
         runtimeInjection: false,
         enableInlinedConditionalMerge: true,
         treeshakeCompensation: true,
-        aliases: { '@/*': [path.join(__dirname, 'src', '*')] },
+        aliases: { "@/*": [path.join(__dirname, "src", "*")] },
         unstable_moduleResolution: {
-          type: 'commonJS',
+          type: "commonJS",
           rootDir: __dirname,
         },
       },

@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import type React from "react";
 import * as stylex from "@stylexjs/stylex";
 
-import { colors, spacing } from "@/styles/theme.stylex";
+import { colors, spacing, borderRadius } from "@/styles/theme.stylex";
 
 type RootProps = {
   children: ReactNode;
@@ -18,12 +18,14 @@ type TitleProps = {
 
 const styles = stylex.create({
   root: {
-    display: "grid",
-    gap: spacing.md,
-    padding: spacing.lg,
-    borderRadius: 16,
-    border: `1px solid ${colors.border}`,
-    backgroundColor: colors.backgroundSecondary,
+    display: "block",
+    padding: 0,
+    borderRadius: borderRadius.none,
+    border: "none",
+    backgroundColor: "transparent",
+    overflow: "hidden",
+    filter: "grayscale(100%)",
+    transition: "filter 0.3s ease",
   },
   media: {
     display: "block",
@@ -31,7 +33,7 @@ const styles = stylex.create({
     width: "100%",
     aspectRatio: "16 / 9",
     minHeight: 200,
-    borderRadius: 12,
+    borderRadius: borderRadius.none,
     overflow: "hidden",
   },
   mediaWrapper: {

@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
 import { colors, spacing } from "@/styles/theme.stylex";
 
@@ -42,9 +45,28 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer {...stylex.props(footerStyles.footer)}>
+    <motion.footer
+      {...stylex.props(footerStyles.footer)}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+    >
       <div {...stylex.props(footerStyles.container)}>
-        <div {...stylex.props(footerStyles.links)}>
+        <motion.div
+          {...stylex.props(footerStyles.links)}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{
+            duration: 0.6,
+            ease: [0.16, 1, 0.3, 1],
+            delay: 0.1,
+          }}
+        >
           <a href="/" {...stylex.props(footerStyles.link)}>
             Home
           </a>
@@ -54,11 +76,21 @@ export default function Footer() {
           <a href="/contact" {...stylex.props(footerStyles.link)}>
             Contact
           </a>
-        </div>
-        <p {...stylex.props(footerStyles.text)}>
+        </motion.div>
+        <motion.p
+          {...stylex.props(footerStyles.text)}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{
+            duration: 0.6,
+            ease: [0.16, 1, 0.3, 1],
+            delay: 0.2,
+          }}
+        >
           © {currentYear} Jonathan Willis design. All rights reserved.
-        </p>
+        </motion.p>
       </div>
-    </footer>
+    </motion.footer>
   );
 }

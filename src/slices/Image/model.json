@@ -25,12 +25,7 @@
           "config": {
             "label": "Margin",
             "placeholder": "",
-            "options": [
-              "None",
-              "Above",
-              "Below",
-              "Both"
-            ]
+            "options": ["None", "Above", "Below", "Both"]
           }
         }
       },

@@ -26,10 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      {...stylex.props(darkTheme)}
-    >
+    <html lang="en" {...stylex.props(darkTheme)}>
       <body {...stylex.props(bodyStyles.body)}>
         <Header />
         <main {...stylex.props(bodyStyles.main)}>{children}</main>

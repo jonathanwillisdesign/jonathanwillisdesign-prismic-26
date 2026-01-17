@@ -1,0 +1,353 @@
+---
+description: Guidelines for consistent Motion animations across the project
+globs: **/*.{tsx,ts}
+alwaysApply: false
+---
+# Motion Animation Guidelines
+
+Consistent animation patterns and timing for Motion (Framer Motion) animations throughout the project.
+
+## Core Animation Values
+
+### Duration
+- **Standard**: `0.6s` - Use for most animations
+- **Fast**: `0.4s` - Use for quick micro-interactions
+- **Slow**: `0.8s` - Use for hero images and large elements
+
+### Easing
+Always use the same easing curve for consistency:
+```typescript
+ease: [0.16, 1, 0.3, 1]
+```
+This creates a smooth, natural motion curve.
+
+### Delays
+- **Stagger between items**: `0.1s` increments (e.g., `delay: index * 0.1`)
+- **Sequential elements**: `0.1s`, `0.2s`, `0.3s` for natural progression
+
+## Standard Animation Variants
+
+### 1. Fade Up (Most Common)
+Use for content that enters from below:
+```typescript
+initial={{ opacity: 0, y: 20 }}
+animate={{ opacity: 1, y: 0 }}
+// or for scroll-triggered:
+whileInView={{ opacity: 1, y: 0 }}
+transition={{
+  duration: 0.6,
+  ease: [0.16, 1, 0.3, 1],
+}}
+```
+
+### 2. Fade In
+Use for simple opacity transitions:
+```typescript
+initial={{ opacity: 0 }}
+animate={{ opacity: 1 }}
+// or for scroll-triggered:
+whileInView={{ opacity: 1 }}
+transition={{
+  duration: 0.6,
+  ease: [0.16, 1, 0.3, 1],
+}}
+```
+
+### 3. Fade In with Scale
+Use for images and media:
+```typescript
+initial={{ opacity: 0, scale: 0.95 }}
+animate={{ opacity: 1, scale: 1 }}
+// or for scroll-triggered:
+whileInView={{ opacity: 1, scale: 1 }}
+transition={{
+  duration: 0.8,
+  ease: [0.16, 1, 0.3, 1],
+}}
+```
+
+### 4. Scale (for images/avatars)
+Use for circular images or avatars:
+```typescript
+initial={{ opacity: 0, scale: 0.8 }}
+animate={{ opacity: 1, scale: 1 }}
+transition={{
+  duration: 0.6,
+  ease: [0.16, 1, 0.3, 1],
+  delay: 0.1,
+}}
+```
+
+## Scroll-Triggered Animations
+
+Always use `whileInView` with `viewport` configuration for scroll-triggered animations:
+
+```typescript
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true, margin: "-50px" }}
+  transition={{
+    duration: 0.6,
+    ease: [0.16, 1, 0.3, 1],
+  }}
+>
+  {/* content */}
+</motion.div>
+```
+
+**Viewport settings:**
+- `once: true` - Animate only once when entering viewport
+- `margin: "-50px"` - Trigger animation slightly before element enters viewport
+
+## Staggered Animations
+
+For lists and grids, use staggered delays:
+
+```typescript
+{items.map((item, index) => (
+  <motion.div
+    key={item.id}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1],
+      delay: index * 0.1, // Stagger by 0.1s per item
+    }}
+  >
+    {item.content}
+  </motion.div>
+))}
+```
+
+## Sequential Animations
+
+For elements that should animate in sequence:
+
+```typescript
+// First element
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+/>
+
+// Second element
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+/>
+
+// Third element
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+/>
+```
+
+## Component Patterns
+
+### Server Component → Client Component Pattern
+
+Since Motion requires client components, wrap animated sections:
+
+```typescript
+// Server Component (page.tsx)
+export default async function Page() {
+  return <AnimatedSection data={data} />;
+}
+
+// Client Component (AnimatedSection.tsx)
+"use client";
+import { motion } from "motion/react";
+
+export function AnimatedSection({ data }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+    >
+      {/* content */}
+    </motion.div>
+  );
+}
+```
+
+## Common Use Cases
+
+### Hero Sections
+```typescript
+// Title
+<motion.h1
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+/>
+
+// Description
+<motion.p
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+/>
+
+// Image
+<motion.div
+  initial={{ opacity: 0, scale: 0.95 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+/>
+```
+
+### Slice Components
+```typescript
+"use client";
+import { motion } from "motion/react";
+
+export function TextSlice({ slice }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+    >
+      {/* slice content */}
+    </motion.div>
+  );
+}
+```
+
+### Card Grids
+```typescript
+<motion.div
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true, margin: "-50px" }}
+  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+>
+  {cards.map((card, index) => (
+    <motion.div
+      key={card.id}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+        delay: index * 0.1,
+      }}
+    >
+      {/* card content */}
+    </motion.div>
+  ))}
+</motion.div>
+```
+
+## Accessibility
+
+Always respect `prefers-reduced-motion`:
+
+```typescript
+import { useReducedMotion } from "motion/react";
+
+export function AnimatedComponent() {
+  const shouldReduceMotion = useReducedMotion();
+  
+  return (
+    <motion.div
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: shouldReduceMotion ? 0 : 0.6,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+    >
+      {/* content */}
+    </motion.div>
+  );
+}
+```
+
+## Do's and Don'ts
+
+### ✅ DO
+- Use consistent duration (0.6s) and easing `[0.16, 1, 0.3, 1]`
+- Use `whileInView` with `viewport={{ once: true }}` for scroll animations
+- Stagger animations with `delay: index * 0.1` for lists
+- Use `fadeUp` variant for most content
+- Use `fadeInScale` for images
+- Keep delays sequential (0.1s, 0.2s, 0.3s)
+
+### ❌ DON'T
+- Don't use random durations or easing curves
+- Don't animate on every scroll (use `once: true`)
+- Don't use excessive delays (> 0.5s)
+- Don't mix different animation styles in the same section
+- Don't animate server components directly (wrap in client component)
+- Don't forget to add `"use client"` directive
+
+## Animation Wrapper Component
+
+For reusable animations, use the `AnimationWrapper` component:
+
+```typescript
+import { AnimationWrapper } from "@/components/AnimationWrapper";
+
+<AnimationWrapper variant="fadeUp" delay={0.1}>
+  {/* content */}
+</AnimationWrapper>
+```
+
+Available variants:
+- `fadeUp` - Fade in from below (default)
+- `fadeIn` - Simple fade in
+- `fadeInScale` - Fade in with scale (for images)
+
+## Quick Reference
+
+```typescript
+// Standard fade-up animation
+const standardAnimation = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: {
+    duration: 0.6,
+    ease: [0.16, 1, 0.3, 1],
+  },
+};
+
+// Scroll-triggered animation
+const scrollAnimation = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-50px" },
+  transition: {
+    duration: 0.6,
+    ease: [0.16, 1, 0.3, 1],
+  },
+};
+
+// Image animation
+const imageAnimation = {
+  initial: { opacity: 0, scale: 0.95 },
+  whileInView: { opacity: 1, scale: 1 },
+  viewport: { once: true, margin: "-50px" },
+  transition: {
+    duration: 0.8,
+    ease: [0.16, 1, 0.3, 1],
+  },
+};
+```

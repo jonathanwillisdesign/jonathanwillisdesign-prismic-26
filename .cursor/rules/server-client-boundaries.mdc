@@ -1,0 +1,203 @@
+---
+description: Rules for passing data between Server Components and Client Components in Next.js
+globs: **/*.{tsx,ts}
+alwaysApply: false
+---
+# Server-to-Client Component Boundaries
+
+**CRITICAL**: Never pass functions, StyleX style objects, or complex non-serializable objects from Server Components to Client Components.
+
+## The Problem
+
+Next.js Server Components run on the server and cannot pass functions or complex objects to Client Components. This causes errors like:
+
+```
+Error: Functions cannot be passed directly to Client Components unless you explicitly expose it by marking it with "use server".
+Error: Attempted to call createMotionComponent() from the server but createMotionComponent is on the client.
+```
+
+## The Solution
+
+**Move function/component creation into the Client Component itself.**
+
+```typescript
+// ❌ BAD: Passing functions from server to client
+// Server Component (page.tsx)
+const richTextComponents: JSXMapSerializer = {
+  paragraph: ({ children }) => <p>{children}</p>,
+  // ... more functions
+};
+
+export default async function Page() {
+  return <ClientComponent components={richTextComponents} />;
+}
+
+// ✅ GOOD: Create functions inside Client Component
+// Server Component (page.tsx)
+export default async function Page() {
+  return <ClientComponent data={serializableData} />;
+}
+
+// Client Component
+"use client";
+export function ClientComponent({ data }) {
+  const richTextComponents: JSXMapSerializer = {
+    paragraph: ({ children }) => <p>{children}</p>,
+    // ... functions created here
+  };
+  
+  return <PrismicRichText components={richTextComponents} />;
+}
+```
+
+## What Can Be Passed
+
+✅ **Safe to pass:**
+- Primitives (string, number, boolean, null, undefined)
+- Plain objects with serializable values
+- Arrays of serializable values
+- Prismic field data (it's serializable)
+- Dates (serialized as strings)
+
+❌ **Cannot be passed:**
+- Functions
+- StyleX style objects (`stylex.create()` results)
+- React components
+- Class instances
+- Symbols
+- Motion components (`motion.div`, etc.)
+- Any non-serializable data
+
+## Common Patterns
+
+### 1. Rich Text Components
+
+```typescript
+// ❌ BAD
+export default async function Page() {
+  const components = { paragraph: ({ children }) => <p>{children}</p> };
+  return <RichTextSlice components={components} />;
+}
+
+// ✅ GOOD
+"use client";
+export function RichTextSlice({ field }) {
+  const components = { paragraph: ({ children }) => <p>{children}</p> };
+  return <PrismicRichText field={field} components={components} />;
+}
+```
+
+### 2. StyleX Styles
+
+```typescript
+// ❌ BAD
+export default async function Page() {
+  const styles = stylex.create({ container: { padding: 20 } });
+  return <Component styles={styles} />;
+}
+
+// ✅ GOOD
+"use client";
+export function Component() {
+  const styles = stylex.create({ container: { padding: 20 } });
+  return <div {...stylex.props(styles.container)} />;
+}
+```
+
+### 3. Motion Components
+
+```typescript
+// ❌ BAD
+export default async function Page() {
+  return <motion.div animate={{ opacity: 1 }}>Content</motion.div>;
+}
+
+// ✅ GOOD
+"use client";
+export function AnimatedPage() {
+  return <motion.div animate={{ opacity: 1 }}>Content</motion.div>;
+}
+```
+
+### 4. Event Handlers
+
+```typescript
+// ❌ BAD
+export default async function Page() {
+  const handleClick = () => console.log("clicked");
+  return <Button onClick={handleClick} />;
+}
+
+// ✅ GOOD
+"use client";
+export function Button() {
+  const handleClick = () => console.log("clicked");
+  return <button onClick={handleClick}>Click me</button>;
+}
+```
+
+## Real-World Example: Case Study Hero
+
+```typescript
+// ❌ Before: Functions passed from server
+export default async function CaseStudyPage() {
+  const richTextComponents = { 
+    paragraph: ({ children }) => <p>{children}</p> 
+  };
+  const styles = stylex.create({ header: { padding: 20 } });
+  
+  return (
+    <CaseStudyHero 
+      components={richTextComponents}
+      styles={styles}
+    />
+  );
+}
+
+// ✅ After: Functions created in client component
+export default async function CaseStudyPage() {
+  return (
+    <CaseStudyHero 
+      title={caseStudy.data.title}
+      description={caseStudy.data.description}
+      heroImage={caseStudy.data.hero_image}
+    />
+  );
+}
+
+"use client";
+export function CaseStudyHero({ title, description, heroImage }) {
+  const richTextComponents = { 
+    paragraph: ({ children }) => <p>{children}</p> 
+  };
+  const styles = stylex.create({ header: { padding: 20 } });
+  
+  return (
+    <motion.div {...stylex.props(styles.header)}>
+      <PrismicRichText 
+        field={description} 
+        components={richTextComponents} 
+      />
+    </motion.div>
+  );
+}
+```
+
+## Quick Checklist
+
+When creating a Client Component that receives props from a Server Component:
+
+- [ ] Are all props serializable? (no functions, no StyleX objects, no components)
+- [ ] Are functions created inside the Client Component?
+- [ ] Are StyleX styles created inside the Client Component?
+- [ ] Are Motion components used only in Client Components?
+- [ ] Are event handlers defined inside the Client Component?
+
+## Error Messages to Watch For
+
+If you see these errors, you're likely passing non-serializable data:
+
+- `Functions cannot be passed directly to Client Components`
+- `Attempted to call [function] from the server but [function] is on the client`
+- `Objects are not valid as a React child`
+- `Cannot serialize [type]`

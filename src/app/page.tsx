@@ -8,7 +8,13 @@ import { components } from "@/slices";
 
 export default async function Home() {
   const client = createClient();
-  const home = await client.getByUID("page", "home");
+  const home = await client.getByUID("page", "home", {
+    fetchLinks: [
+      "case_study.title",
+      "case_study.hero_image",
+      "case_study.description",
+    ],
+  });
 
   // <SliceZone> renders the page's slices.
   return <SliceZone slices={home.data.slices} components={components} />;

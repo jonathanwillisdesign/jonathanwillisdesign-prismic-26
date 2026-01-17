@@ -28,8 +28,7 @@ type PickContentRelationshipFieldData<
       TSubRelationship["customtypes"],
       TLang
     >;
-  } & // Group
-  {
+  } & { // Group
     [TGroup in Extract<
       TRelationship["fields"][number],
       | prismic.CustomTypeModelFetchGroupLevel1
@@ -41,8 +40,7 @@ type PickContentRelationshipFieldData<
           PickContentRelationshipFieldData<TGroup, TGroupData, TLang>
         >
       : never;
-  } & // Other fields
-  {
+  } & { // Other fields
     [TFieldKey in Extract<
       TRelationship["fields"][number],
       string
@@ -433,12 +431,7 @@ export interface FeaturedWorkSliceDefaultPrimaryCaseStudiesItem {
    * - **Documentation**: https://prismic.io/docs/fields/content-relationship
    */
   case_study: ContentRelationshipFieldWithData<
-    [
-      {
-        id: "case_study";
-        fields: ["meta_title", "meta_description", "meta_image"];
-      },
-    ]
+    [{ id: "case_study"; fields: ["title", "hero_image", "description"] }]
   >;
 }
 

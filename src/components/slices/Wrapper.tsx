@@ -58,7 +58,10 @@ function Container({ children, fullWidth, ...props }: ContainerProps) {
   return (
     <div
       {...props}
-      {...stylex.props(styles.container, fullWidth && styles.containerFullWidth)}
+      {...stylex.props(
+        styles.container,
+        fullWidth && styles.containerFullWidth,
+      )}
     >
       {children}
     </div>
@@ -81,7 +84,7 @@ function Body({ children, ...props }: SectionProps) {
   );
 }
 
-export const Layout = {
+export const Wrapper = {
   Root,
   Container,
   Header,

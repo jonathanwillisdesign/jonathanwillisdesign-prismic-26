@@ -27,11 +27,7 @@
                   "customtypes": [
                     {
                       "id": "case_study",
-                      "fields": [
-                        "meta_title",
-                        "meta_description",
-                        "meta_image"
-                      ]
+                      "fields": ["title", "hero_image", "description"]
                     }
                   ]
                 }

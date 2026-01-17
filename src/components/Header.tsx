@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
 import { colors, spacing } from "@/styles/theme.stylex";
 
@@ -56,6 +57,10 @@ const headerStyles = stylex.create({
       cursor: "pointer",
       padding: spacing.sm,
       zIndex: 2,
+      transition: "opacity 0.2s ease",
+      ":hover": {
+        opacity: 0.7,
+      },
     },
   },
   burgerLine: {
@@ -125,19 +130,46 @@ export default function Header() {
   };
 
   return (
-    <header {...stylex.props(headerStyles.header)}>
+    <motion.header
+      {...stylex.props(headerStyles.header)}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+    >
       <div {...stylex.props(headerStyles.container)}>
-        <a href="/" {...stylex.props(headerStyles.logo)}>
+        <motion.a
+          href="/"
+          {...stylex.props(headerStyles.logo)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 0.6,
+            ease: [0.16, 1, 0.3, 1],
+            delay: 0.1,
+          }}
+        >
           Jonathan Willis
-        </a>
-        <nav {...stylex.props(headerStyles.nav)}>
+        </motion.a>
+        <motion.nav
+          {...stylex.props(headerStyles.nav)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 0.6,
+            ease: [0.16, 1, 0.3, 1],
+            delay: 0.2,
+          }}
+        >
           <a href="/about" {...stylex.props(headerStyles.navLink)}>
             About
           </a>
           <a href="/contact" {...stylex.props(headerStyles.navLink)}>
             Contact
           </a>
-        </nav>
+        </motion.nav>
         <button
           {...stylex.props(headerStyles.burgerButton)}
           onClick={toggleMenu}
@@ -146,19 +178,19 @@ export default function Header() {
           <span
             {...stylex.props(
               headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen1
+              isMenuOpen && headerStyles.burgerLineOpen1,
             )}
           />
           <span
             {...stylex.props(
               headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen2
+              isMenuOpen && headerStyles.burgerLineOpen2,
             )}
           />
           <span
             {...stylex.props(
               headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen3
+              isMenuOpen && headerStyles.burgerLineOpen3,
             )}
           />
         </button>
@@ -166,7 +198,7 @@ export default function Header() {
       <nav
         {...stylex.props(
           headerStyles.mobileMenu,
-          isMenuOpen && headerStyles.mobileMenuOpen
+          isMenuOpen && headerStyles.mobileMenuOpen,
         )}
       >
         <a
@@ -184,6 +216,6 @@ export default function Header() {
           Contact
         </a>
       </nav>
-    </header>
+    </motion.header>
   );
 }

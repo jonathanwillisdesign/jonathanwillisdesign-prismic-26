@@ -12,7 +12,15 @@ type Params = { uid: string };
 export default async function Page({ params }: { params: Promise<Params> }) {
   const { uid } = await params;
   const client = createClient();
-  const page = await client.getByUID("page", uid).catch(() => notFound());
+  const page = await client
+    .getByUID("page", uid, {
+      fetchLinks: [
+        "case_study.title",
+        "case_study.hero_image",
+        "case_study.description",
+      ],
+    })
+    .catch(() => notFound());
 
   // <SliceZone> renders the page's slices.
   return <SliceZone slices={page.data.slices} components={components} />;
