@@ -57,16 +57,15 @@ const headerStyles = stylex.create({
       justifyContent: "center",
       width: "40px",
       height: "40px",
-      backgroundColor: colors.backgroundSecondary,
       border: "none",
       borderRadius: "999px",
+      backgroundColor: "transparent",
       color: colors.foreground,
       cursor: "pointer",
       padding: spacing.sm,
       zIndex: 2,
       overflow: "visible",
-      transition:
-        "opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease",
+      transition: "opacity 0.2s ease",
       ":hover": {
         opacity: 0.7,
       },
@@ -206,9 +205,7 @@ export default function Header() {
                 cx="12"
                 cy="12"
                 r="4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+                fill="currentColor"
                 {...stylex.props(
                   headerStyles.burgerCircle,
                   isMenuOpen && headerStyles.burgerCircleOpen,
