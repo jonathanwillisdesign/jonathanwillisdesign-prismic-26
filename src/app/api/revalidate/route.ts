@@ -30,7 +30,7 @@ export async function POST(request: Request) {
   }
 
   // Purge all Prismic-tagged fetches (configured in `src/prismicio.ts`).
-  revalidateTag("prismic");
+  revalidateTag("prismic", "max");
 
   return NextResponse.json({ revalidated: true, now: Date.now() });
 }
