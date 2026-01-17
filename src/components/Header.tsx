@@ -182,6 +182,7 @@ export default function Header() {
             animationStyles.delay1,
             animationStyles.fadeInAnimated,
           )}
+          onClick={() => setIsMenuOpen(false)}
         >
           Jonathan Willis
         </PrismicNextLink>
