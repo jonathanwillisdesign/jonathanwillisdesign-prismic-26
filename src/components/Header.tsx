@@ -3,7 +3,7 @@
 import { useState } from "react";
 import * as stylex from "@stylexjs/stylex";
 import { Dialog } from "@base-ui/react/dialog";
-import Link from "next/link";
+import { PrismicNextLink } from "@prismicio/next";
 import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
 
 const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
@@ -177,7 +177,7 @@ export default function Header() {
       )}
     >
       <div {...stylex.props(headerStyles.container)}>
-        <Link
+        <PrismicNextLink
           href="/"
           {...stylex.props(
             headerStyles.logo,
@@ -187,7 +187,7 @@ export default function Header() {
           )}
         >
           Jonathan Willis
-        </Link>
+        </PrismicNextLink>
         <nav
           {...stylex.props(
             headerStyles.nav,
@@ -196,12 +196,15 @@ export default function Header() {
             animationStyles.fadeInAnimated,
           )}
         >
-          <Link href="/about" {...stylex.props(headerStyles.navLink)}>
+          <PrismicNextLink href="/about" {...stylex.props(headerStyles.navLink)}>
             About
-          </Link>
-          <Link href="/contact" {...stylex.props(headerStyles.navLink)}>
+          </PrismicNextLink>
+          <PrismicNextLink
+            href="/contact"
+            {...stylex.props(headerStyles.navLink)}
+          >
             Contact
-          </Link>
+          </PrismicNextLink>
         </nav>
         <Dialog.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <Dialog.Trigger
@@ -238,20 +241,20 @@ export default function Header() {
                   Menu
                 </Dialog.Title>
                 <nav {...stylex.props(headerStyles.mobileNav)}>
-                  <Link
+                  <PrismicNextLink
                     href="/about"
                     {...stylex.props(headerStyles.mobileNavLink)}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     About
-                  </Link>
-                  <Link
+                  </PrismicNextLink>
+                  <PrismicNextLink
                     href="/contact"
                     {...stylex.props(headerStyles.mobileNavLink)}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Contact
-                  </Link>
+                  </PrismicNextLink>
                 </nav>
               </Dialog.Popup>
             </Dialog.Viewport>
