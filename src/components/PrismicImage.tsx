@@ -4,7 +4,9 @@ import { PrismicNextImage } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
 import { type ComponentProps, type CSSProperties, useMemo, useState } from "react";
 
-import { colors } from "@/styles/theme.stylex";
+// Keep this a fixed dark gray so images always have a stable backing
+// (even in light theme) while loading.
+const IMAGE_PLACEHOLDER_COLOR = "#1a1a1a";
 
 type PrismicNextImageBaseProps = ComponentProps<typeof PrismicNextImage>;
 
@@ -35,7 +37,7 @@ const styles = stylex.create({
     width: "100%",
     maxWidth: "100%",
     overflow: "hidden",
-    backgroundColor: colors.backgroundSecondary,
+    backgroundColor: IMAGE_PLACEHOLDER_COLOR,
   },
   fillParent: {
     height: "100%",
@@ -53,7 +55,7 @@ const styles = stylex.create({
   placeholder: {
     position: "absolute",
     inset: 0,
-    backgroundColor: colors.backgroundSecondary,
+    backgroundColor: IMAGE_PLACEHOLDER_COLOR,
     opacity: 1,
     transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
     "@media (prefers-reduced-motion: reduce)": {
