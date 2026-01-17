@@ -3,6 +3,7 @@
 import { useState } from "react";
 import * as stylex from "@stylexjs/stylex";
 import { Dialog } from "@base-ui/react/dialog";
+import Link from "next/link";
 import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
 
 const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
@@ -176,7 +177,7 @@ export default function Header() {
       )}
     >
       <div {...stylex.props(headerStyles.container)}>
-        <a
+        <Link
           href="/"
           {...stylex.props(
             headerStyles.logo,
@@ -186,7 +187,7 @@ export default function Header() {
           )}
         >
           Jonathan Willis
-        </a>
+        </Link>
         <nav
           {...stylex.props(
             headerStyles.nav,
@@ -195,12 +196,12 @@ export default function Header() {
             animationStyles.fadeInAnimated,
           )}
         >
-          <a href="/about" {...stylex.props(headerStyles.navLink)}>
+          <Link href="/about" {...stylex.props(headerStyles.navLink)}>
             About
-          </a>
-          <a href="/contact" {...stylex.props(headerStyles.navLink)}>
+          </Link>
+          <Link href="/contact" {...stylex.props(headerStyles.navLink)}>
             Contact
-          </a>
+          </Link>
         </nav>
         <Dialog.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <Dialog.Trigger
@@ -237,20 +238,20 @@ export default function Header() {
                   Menu
                 </Dialog.Title>
                 <nav {...stylex.props(headerStyles.mobileNav)}>
-                  <a
+                  <Link
                     href="/about"
                     {...stylex.props(headerStyles.mobileNavLink)}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     About
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="/contact"
                     {...stylex.props(headerStyles.mobileNavLink)}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Contact
-                  </a>
+                  </Link>
                 </nav>
               </Dialog.Popup>
             </Dialog.Viewport>
