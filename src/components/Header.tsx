@@ -97,7 +97,7 @@ const headerStyles = stylex.create({
     display: "none",
     position: "fixed",
     inset: 0,
-    zIndex: 80,
+    zIndex: 110,
     backgroundColor: "rgba(0, 0, 0, 0.4)",
     [MOBILE_BREAKPOINT]: {
       display: "block",
@@ -115,7 +115,7 @@ const headerStyles = stylex.create({
     display: "none",
     position: "fixed",
     inset: 0,
-    zIndex: 90,
+    zIndex: 120,
     alignItems: "flex-start",
     justifyContent: "stretch",
     paddingTop: "72px",
