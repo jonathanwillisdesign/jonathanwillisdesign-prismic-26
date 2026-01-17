@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as stylex from "@stylexjs/stylex";
 import { Dialog } from "@base-ui/react/dialog";
 import { List, X } from "@phosphor-icons/react";
@@ -8,6 +8,7 @@ import { PrismicNextLink } from "@prismicio/next";
 import { colors, spacing } from "@/styles/theme.stylex";
 
 const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
+const MENU_EXIT_DURATION_MS = 400;
 
 const headerStyles = stylex.create({
   header: {
@@ -167,6 +168,47 @@ const headerStyles = stylex.create({
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuClosing, setIsMenuClosing] = useState(false);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearCloseTimeout = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  };
+
+  const handleMenuChange = (nextOpen: boolean) => {
+    if (nextOpen) {
+      setIsMenuOpen(true);
+      clearCloseTimeout();
+      setIsMenuClosing(false);
+      return;
+    }
+
+    if (!isMenuOpen) {
+      return;
+    }
+
+    setIsMenuOpen(false);
+    clearCloseTimeout();
+    setIsMenuClosing(true);
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsMenuClosing(false);
+      closeTimeoutRef.current = null;
+    }, MENU_EXIT_DURATION_MS);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
+  const isMenuVisible = isMenuOpen || isMenuClosing;
 
   return (
     <header {...stylex.props(headerStyles.header)}>
@@ -176,7 +218,7 @@ export default function Header() {
           {...stylex.props(
             headerStyles.logo,
           )}
-          onClick={() => setIsMenuOpen(false)}
+          onClick={() => handleMenuChange(false)}
         >
           Jonathan Willis
         </PrismicNextLink>
@@ -193,13 +235,13 @@ export default function Header() {
             Contact
           </PrismicNextLink>
         </nav>
-        <Dialog.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+        <Dialog.Root open={isMenuOpen} onOpenChange={handleMenuChange}>
           <Dialog.Trigger
             {...stylex.props(headerStyles.burgerButton)}
             type="button"
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={isMenuVisible ? "Close menu" : "Open menu"}
           >
-            {isMenuOpen ? (
+            {isMenuVisible ? (
               <X aria-hidden="true" {...stylex.props(headerStyles.icon)} />
             ) : (
               <List aria-hidden="true" {...stylex.props(headerStyles.icon)} />
@@ -214,14 +256,14 @@ export default function Header() {
                   <PrismicNextLink
                     href="/about"
                     {...stylex.props(headerStyles.mobileNavLink)}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => handleMenuChange(false)}
                   >
                     About
                   </PrismicNextLink>
                   <PrismicNextLink
                     href="/contact"
                     {...stylex.props(headerStyles.mobileNavLink)}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => handleMenuChange(false)}
                   >
                     Contact
                   </PrismicNextLink>
