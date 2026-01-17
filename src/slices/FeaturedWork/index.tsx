@@ -8,7 +8,6 @@ import {
   type JSXMapSerializer,
 } from "@prismicio/react";
 import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
-import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { Wrapper } from "@/components/slices/Wrapper";
@@ -17,8 +16,10 @@ import {
   colors,
   typography,
   borderRadius,
+  animationStyles,
 } from "@/styles/theme.stylex";
 import { Text } from "@/components/slices/Text";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /**
  * Props for `FeaturedWork`.
@@ -141,18 +142,29 @@ const CardItem: FC<CardItemProps> = ({
   heroImage,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { ref, isVisible } = useScrollAnimation({
+    once: true,
+    margin: "-50px",
+  });
+
+  const delayStyle =
+    index === 0
+      ? null
+      : index === 1
+        ? animationStyles.delay1
+        : index === 2
+          ? animationStyles.delay2
+          : animationStyles.delay3;
 
   return (
-    <motion.div
+    <div
       key={caseStudy.id ?? `${title}-${index}`}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1],
-        delay: index * 0.1,
-      }}
+      ref={ref}
+      {...stylex.props(
+        animationStyles.fadeUp,
+        delayStyle,
+        isVisible && animationStyles.fadeUpAnimated,
+      )}
     >
       <PrismicNextLink
         field={caseStudy as LinkField}
@@ -199,7 +211,7 @@ const CardItem: FC<CardItemProps> = ({
           </div>
         </div>
       </PrismicNextLink>
-    </motion.div>
+    </div>
   );
 };
 

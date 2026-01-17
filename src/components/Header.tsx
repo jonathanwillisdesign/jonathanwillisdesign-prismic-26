@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
-import { colors, spacing } from "@/styles/theme.stylex";
+import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
 
 const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
 
@@ -130,38 +129,32 @@ export default function Header() {
   };
 
   return (
-    <motion.header
-      {...stylex.props(headerStyles.header)}
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1],
-      }}
+    <header
+      {...stylex.props(
+        headerStyles.header,
+        animationStyles.fadeDown,
+        animationStyles.fadeDownAnimated,
+      )}
     >
       <div {...stylex.props(headerStyles.container)}>
-        <motion.a
+        <a
           href="/"
-          {...stylex.props(headerStyles.logo)}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: 0.6,
-            ease: [0.16, 1, 0.3, 1],
-            delay: 0.1,
-          }}
+          {...stylex.props(
+            headerStyles.logo,
+            animationStyles.fadeIn,
+            animationStyles.delay1,
+            animationStyles.fadeInAnimated,
+          )}
         >
           Jonathan Willis
-        </motion.a>
-        <motion.nav
-          {...stylex.props(headerStyles.nav)}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: 0.6,
-            ease: [0.16, 1, 0.3, 1],
-            delay: 0.2,
-          }}
+        </a>
+        <nav
+          {...stylex.props(
+            headerStyles.nav,
+            animationStyles.fadeIn,
+            animationStyles.delay2,
+            animationStyles.fadeInAnimated,
+          )}
         >
           <a href="/about" {...stylex.props(headerStyles.navLink)}>
             About
@@ -169,7 +162,7 @@ export default function Header() {
           <a href="/contact" {...stylex.props(headerStyles.navLink)}>
             Contact
           </a>
-        </motion.nav>
+        </nav>
         <button
           {...stylex.props(headerStyles.burgerButton)}
           onClick={toggleMenu}
@@ -216,6 +209,6 @@ export default function Header() {
           Contact
         </a>
       </nav>
-    </motion.header>
+    </header>
   );
 }

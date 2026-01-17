@@ -4,11 +4,11 @@ import { FC } from "react";
 import { Content, isFilled } from "@prismicio/client";
 import { SliceComponentProps } from "@prismicio/react";
 import { PrismicNextImage } from "@prismicio/next";
-import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { Wrapper } from "@/components/slices/Wrapper";
-import { spacing } from "@/styles/theme.stylex";
+import { spacing, animationStyles } from "@/styles/theme.stylex";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /**
  * Props for `ImageBlock`.
@@ -57,6 +57,9 @@ const styles = stylex.create({
 
 const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
   const isSideBySide = (slice.variation as string) === "sideBySide";
+  const image1Ref = useScrollAnimation({ once: true, margin: "-50px" });
+  const image2Ref = useScrollAnimation({ once: true, margin: "-50px" });
+  const singleImageRef = useScrollAnimation({ once: true, margin: "-50px" });
 
   return (
     <div {...stylex.props(styles.root)}>
@@ -68,16 +71,14 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
           {isSideBySide ? (
             <div {...stylex.props(styles.sideBySide)}>
               {isFilled.image(slice.primary.image) && (
-                <motion.div
-                  {...stylex.props(styles.item)}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{
-                    duration: 0.6,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: 0.1,
-                  }}
+                <div
+                  ref={image1Ref.ref}
+                  {...stylex.props(
+                    styles.item,
+                    animationStyles.fadeInScale,
+                    animationStyles.delay1,
+                    image1Ref.isVisible && animationStyles.fadeInScaleAnimated,
+                  )}
                 >
                   <div {...stylex.props(styles.imageWrapper)}>
                     <PrismicNextImage
@@ -92,22 +93,20 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                       }}
                     />
                   </div>
-                </motion.div>
+                </div>
               )}
               {"image_2" in slice.primary &&
                 isFilled.image(
                   (slice.primary as any).image_2
                 ) && (
-                  <motion.div
-                    {...stylex.props(styles.item)}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{
-                      duration: 0.6,
-                      ease: [0.16, 1, 0.3, 1],
-                      delay: 0.2,
-                    }}
+                  <div
+                    ref={image2Ref.ref}
+                    {...stylex.props(
+                      styles.item,
+                      animationStyles.fadeInScale,
+                      animationStyles.delay2,
+                      image2Ref.isVisible && animationStyles.fadeInScaleAnimated,
+                    )}
                   >
                     <div {...stylex.props(styles.imageWrapper)}>
                       <PrismicNextImage
@@ -122,20 +121,18 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                         }}
                       />
                     </div>
-                  </motion.div>
+                  </div>
                 )}
             </div>
           ) : (
             isFilled.image(slice.primary.image) && (
-              <motion.div
-                {...stylex.props(styles.single)}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{
-                  duration: 0.6,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
+              <div
+                ref={singleImageRef.ref}
+                {...stylex.props(
+                  styles.single,
+                  animationStyles.fadeInScale,
+                  singleImageRef.isVisible && animationStyles.fadeInScaleAnimated,
+                )}
               >
                 <div {...stylex.props(styles.imageWrapper)}>
                   <PrismicNextImage
@@ -150,7 +147,7 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                     }}
                   />
                 </div>
-              </motion.div>
+              </div>
             )
           )}
         </Wrapper.Container>

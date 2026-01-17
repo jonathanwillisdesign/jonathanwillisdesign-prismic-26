@@ -1,50 +1,67 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { motion, type MotionProps } from "motion/react";
+import * as stylex from "@stylexjs/stylex";
+import { animationStyles } from "@/styles/theme.stylex";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 type AnimationWrapperProps = {
   children: ReactNode;
-  delay?: number;
-  variant?: "fadeUp" | "fadeIn" | "fadeInScale";
-} & Omit<MotionProps, "initial" | "animate" | "whileInView">;
+  delay?: 0 | 1 | 2 | 3;
+  variant?: "fadeUp" | "fadeIn" | "fadeInScale" | "fadeInScaleSmall";
+  scrollTrigger?: boolean;
+  className?: string;
+  style?: stylex.StyleXStyles;
+};
 
-const variants = {
-  fadeUp: {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-  },
-  fadeIn: {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-  },
-  fadeInScale: {
-    initial: { opacity: 0, scale: 0.95 },
-    animate: { opacity: 1, scale: 1 },
-  },
+const variantStyles = {
+  fadeUp: animationStyles.fadeUp,
+  fadeUpAnimated: animationStyles.fadeUpAnimated,
+  fadeIn: animationStyles.fadeIn,
+  fadeInAnimated: animationStyles.fadeInAnimated,
+  fadeInScale: animationStyles.fadeInScale,
+  fadeInScaleAnimated: animationStyles.fadeInScaleAnimated,
+  fadeInScaleSmall: animationStyles.fadeInScaleSmall,
+  fadeInScaleSmallAnimated: animationStyles.fadeInScaleSmallAnimated,
+};
+
+const delayStyles = {
+  0: null,
+  1: animationStyles.delay1,
+  2: animationStyles.delay2,
+  3: animationStyles.delay3,
 };
 
 export function AnimationWrapper({
   children,
   delay = 0,
   variant = "fadeUp",
-  ...props
+  scrollTrigger = true,
+  className,
+  style,
 }: AnimationWrapperProps) {
-  const animationVariant = variants[variant];
+  const { ref, isVisible } = useScrollAnimation({
+    once: true,
+    margin: "-50px",
+  });
+
+  const baseStyle = variantStyles[variant];
+  const animatedStyle = variantStyles[`${variant}Animated` as keyof typeof variantStyles];
+  const delayStyle = delayStyles[delay];
 
   return (
-    <motion.div
-      initial={animationVariant.initial}
-      whileInView={animationVariant.animate}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1],
-        delay,
-      }}
-      {...props}
+    <div
+      ref={scrollTrigger ? ref : undefined}
+      {...stylex.props(
+        baseStyle,
+        delayStyle,
+        scrollTrigger && isVisible && animatedStyle,
+        !scrollTrigger && animatedStyle, // If not scroll-triggered, animate immediately
+        style,
+      )}
+      className={className}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
-import { colors, spacing } from "@/styles/theme.stylex";
+import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const footerStyles = stylex.create({
   footer: {
@@ -43,29 +43,28 @@ const footerStyles = stylex.create({
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const footerRef = useScrollAnimation({ once: true, margin: "-50px" });
+  const linksRef = useScrollAnimation({ once: true, margin: "-50px" });
+  const textRef = useScrollAnimation({ once: true, margin: "-50px" });
 
   return (
-    <motion.footer
-      {...stylex.props(footerStyles.footer)}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1],
-      }}
+    <footer
+      ref={footerRef.ref}
+      {...stylex.props(
+        footerStyles.footer,
+        animationStyles.fadeIn,
+        footerRef.isVisible && animationStyles.fadeInAnimated,
+      )}
     >
       <div {...stylex.props(footerStyles.container)}>
-        <motion.div
-          {...stylex.props(footerStyles.links)}
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{
-            duration: 0.6,
-            ease: [0.16, 1, 0.3, 1],
-            delay: 0.1,
-          }}
+        <div
+          ref={linksRef.ref}
+          {...stylex.props(
+            footerStyles.links,
+            animationStyles.fadeUp,
+            animationStyles.delay1,
+            linksRef.isVisible && animationStyles.fadeUpAnimated,
+          )}
         >
           <a href="/" {...stylex.props(footerStyles.link)}>
             Home
@@ -76,21 +75,19 @@ export default function Footer() {
           <a href="/contact" {...stylex.props(footerStyles.link)}>
             Contact
           </a>
-        </motion.div>
-        <motion.p
-          {...stylex.props(footerStyles.text)}
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{
-            duration: 0.6,
-            ease: [0.16, 1, 0.3, 1],
-            delay: 0.2,
-          }}
+        </div>
+        <p
+          ref={textRef.ref}
+          {...stylex.props(
+            footerStyles.text,
+            animationStyles.fadeUp,
+            animationStyles.delay2,
+            textRef.isVisible && animationStyles.fadeUpAnimated,
+          )}
         >
           © {currentYear} Jonathan Willis design. All rights reserved.
-        </motion.p>
+        </p>
       </div>
-    </motion.footer>
+    </footer>
   );
 }

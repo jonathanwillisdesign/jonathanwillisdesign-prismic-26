@@ -57,5 +57,78 @@ export const darkTheme = stylex.createTheme(colors, {
   borderLight: "#404040",
 });
 
+// Animation styles using CSS transitions
+export const animationStyles = stylex.create({
+  // Fade Up (most common) - initial state
+  fadeUp: {
+    opacity: 0,
+    transform: "translateY(20px)",
+    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+  },
+  // Fade Up - animated state
+  fadeUpAnimated: {
+    opacity: 1,
+    transform: "translateY(0)",
+  },
+  // Fade In - initial state
+  fadeIn: {
+    opacity: 0,
+    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+  },
+  // Fade In - animated state
+  fadeInAnimated: {
+    opacity: 1,
+  },
+  // Fade In with Scale (for images) - initial state
+  fadeInScale: {
+    opacity: 0,
+    transform: "scale(0.95)",
+    transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+  },
+  // Fade In with Scale - animated state
+  fadeInScaleAnimated: {
+    opacity: 1,
+    transform: "scale(1)",
+  },
+  // Fade In with Scale Small (for avatars) - initial state
+  fadeInScaleSmall: {
+    opacity: 0,
+    transform: "scale(0.8)",
+    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+  },
+  // Fade In with Scale Small - animated state
+  fadeInScaleSmallAnimated: {
+    opacity: 1,
+    transform: "scale(1)",
+  },
+  // Fade Down (for header) - initial state
+  fadeDown: {
+    opacity: 0,
+    transform: "translateY(-20px)",
+    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+  },
+  // Fade Down - animated state
+  fadeDownAnimated: {
+    opacity: 1,
+    transform: "translateY(0)",
+  },
+  // Delay variants
+  delay1: {
+    transitionDelay: "0.1s",
+  },
+  delay2: {
+    transitionDelay: "0.2s",
+  },
+  delay3: {
+    transitionDelay: "0.3s",
+  },
+  // Respect reduced motion
+  "@media (prefers-reduced-motion: reduce)": {
+    transition: "none",
+    opacity: 1,
+    transform: "none",
+  },
+});
+
 // Export colors for use in components
 // (duplicate re-export removed)

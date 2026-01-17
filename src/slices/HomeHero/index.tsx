@@ -4,12 +4,12 @@ import { FC } from "react";
 import { Content, isFilled } from "@prismicio/client";
 import { SliceComponentProps } from "@prismicio/react";
 import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
-import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { Wrapper } from "@/components/slices/Wrapper";
 import { Text } from "@/components/slices/Text";
-import { colors, spacing } from "@/styles/theme.stylex";
+import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /**
  * Props for `HomeHero`.
@@ -80,6 +80,10 @@ const styles = stylex.create({
 });
 
 const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
+  const headshotRef = useScrollAnimation({ once: true });
+  const statementRef = useScrollAnimation({ once: true });
+  const linksRef = useScrollAnimation({ once: true });
+
   return (
     <div {...stylex.props(styles.root)}>
       <Wrapper.Root
@@ -90,16 +94,14 @@ const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
           <div {...stylex.props(styles.hero)}>
             <div {...stylex.props(styles.header)}>
               {isFilled.image(slice.primary.headshot) && (
-                <motion.div
-                  {...stylex.props(styles.media)}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.6,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: 0.1,
-                  }}
+                <div
+                  ref={headshotRef.ref}
+                  {...stylex.props(
+                    styles.media,
+                    animationStyles.fadeInScaleSmall,
+                    animationStyles.delay1,
+                    headshotRef.isVisible && animationStyles.fadeInScaleSmallAnimated,
+                  )}
                 >
                   <PrismicNextImage
                     field={slice.primary.headshot}
@@ -111,34 +113,30 @@ const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
                       objectPosition: "center",
                     }}
                   />
-                </motion.div>
+                </div>
               )}
               {isFilled.keyText(slice.primary.statement) && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.6,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: 0.2,
-                  }}
+                <div
+                  ref={statementRef.ref}
+                  {...stylex.props(
+                    animationStyles.fadeUp,
+                    animationStyles.delay2,
+                    statementRef.isVisible && animationStyles.fadeUpAnimated,
+                  )}
                 >
                   <Text.Heading as="h1">{slice.primary.statement}</Text.Heading>
-                </motion.div>
+                </div>
               )}
             </div>
             {isFilled.repeatable(slice.primary.links) && (
-              <motion.div
-                {...stylex.props(styles.links)}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.6,
-                  ease: [0.16, 1, 0.3, 1],
-                  delay: 0.3,
-                }}
+              <div
+                ref={linksRef.ref}
+                {...stylex.props(
+                  styles.links,
+                  animationStyles.fadeUp,
+                  animationStyles.delay3,
+                  linksRef.isVisible && animationStyles.fadeUpAnimated,
+                )}
               >
                 {slice.primary.links.map((link, index) => {
                   if (!isFilled.link(link)) {
@@ -159,7 +157,7 @@ const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
                     </PrismicNextLink>
                   );
                 })}
-              </motion.div>
+              </div>
             )}
           </div>
         </Wrapper.Container>

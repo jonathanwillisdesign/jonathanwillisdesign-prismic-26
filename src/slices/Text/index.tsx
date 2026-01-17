@@ -8,13 +8,13 @@ import {
   type JSXMapSerializer,
 } from "@prismicio/react";
 import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
-import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { Wrapper } from "@/components/slices/Wrapper";
 import { linkStyles } from "@/components/slices/Link";
 import { Text } from "@/components/slices/Text";
-import { colors, spacing } from "@/styles/theme.stylex";
+import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /**
  * Props for `TextBlock`.
@@ -69,6 +69,11 @@ const components: JSXMapSerializer = {
 };
 
 const TextBlock: FC<TextBlockProps> = ({ slice }) => {
+  const { ref, isVisible } = useScrollAnimation({
+    once: true,
+    margin: "-50px",
+  });
+
   return (
     <div {...stylex.props(styles.root)}>
       <Wrapper.Root
@@ -76,14 +81,12 @@ const TextBlock: FC<TextBlockProps> = ({ slice }) => {
         data-slice-variation={slice.variation}
       >
         <Wrapper.Container>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{
-              duration: 0.6,
-              ease: [0.16, 1, 0.3, 1],
-            }}
+          <div
+            ref={ref}
+            {...stylex.props(
+              animationStyles.fadeUp,
+              isVisible && animationStyles.fadeUpAnimated,
+            )}
           >
             <Wrapper.Body>
               {isFilled.keyText(slice.primary.title) && (
@@ -98,7 +101,7 @@ const TextBlock: FC<TextBlockProps> = ({ slice }) => {
                 </div>
               )}
             </Wrapper.Body>
-          </motion.div>
+          </div>
         </Wrapper.Container>
       </Wrapper.Root>
     </div>

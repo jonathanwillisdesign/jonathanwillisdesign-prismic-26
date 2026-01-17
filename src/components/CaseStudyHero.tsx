@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
 import { isFilled } from "@prismicio/client";
 import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
@@ -9,7 +8,7 @@ import { PrismicRichText, type JSXMapSerializer } from "@prismicio/react";
 import { Wrapper } from "@/components/slices/Wrapper";
 import { linkStyles } from "@/components/slices/Link";
 import { Text } from "@/components/slices/Text";
-import { spacing } from "@/styles/theme.stylex";
+import { spacing, animationStyles } from "@/styles/theme.stylex";
 
 type CaseStudyHeroProps = {
   title: string | null | undefined;
@@ -86,56 +85,48 @@ export function CaseStudyHero({
   return (
     <Wrapper.Root>
       <div {...stylex.props(styles.hero)}>
-        <motion.div
-          {...stylex.props(styles.header)}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.6,
-            ease: [0.16, 1, 0.3, 1],
-          }}
+        <div
+          {...stylex.props(
+            styles.header,
+            animationStyles.fadeUp,
+            animationStyles.fadeUpAnimated,
+          )}
         >
           {isFilled.keyText(title) && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                ease: [0.16, 1, 0.3, 1],
-                delay: 0.1,
-              }}
+            <div
+              {...stylex.props(
+                animationStyles.fadeUp,
+                animationStyles.delay1,
+                animationStyles.fadeUpAnimated,
+              )}
             >
               <Text.Heading as="h1">{title}</Text.Heading>
-            </motion.div>
+            </div>
           )}
           {isFilled.richText(description) && (
-            <motion.div
-              {...stylex.props(styles.description)}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                ease: [0.16, 1, 0.3, 1],
-                delay: 0.2,
-              }}
+            <div
+              {...stylex.props(
+                styles.description,
+                animationStyles.fadeUp,
+                animationStyles.delay2,
+                animationStyles.fadeUpAnimated,
+              )}
             >
               <PrismicRichText
                 field={description}
                 components={richTextComponents}
               />
-            </motion.div>
+            </div>
           )}
-        </motion.div>
+        </div>
         {isFilled.image(heroImage) && (
-          <motion.div
-            {...stylex.props(styles.heroImage)}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 0.8,
-              ease: [0.16, 1, 0.3, 1],
-              delay: 0.3,
-            }}
+          <div
+            {...stylex.props(
+              styles.heroImage,
+              animationStyles.fadeInScale,
+              animationStyles.delay3,
+              animationStyles.fadeInScaleAnimated,
+            )}
           >
             <Wrapper.Container fullWidth>
               <div {...stylex.props(styles.imageWrapper)}>
@@ -151,7 +142,7 @@ export function CaseStudyHero({
                 />
               </div>
             </Wrapper.Container>
-          </motion.div>
+          </div>
         )}
       </div>
     </Wrapper.Root>
