@@ -2,9 +2,10 @@
 
 import * as stylex from "@stylexjs/stylex";
 import { isFilled } from "@prismicio/client";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+import { PrismicNextLink } from "@prismicio/next";
 import { PrismicRichText, type JSXMapSerializer } from "@prismicio/react";
 
+import { PrismicImage } from "@/components/PrismicImage";
 import { Wrapper } from "@/components/slices/Wrapper";
 import { linkStyles } from "@/components/slices/Link";
 import { Text } from "@/components/slices/Text";
@@ -78,7 +79,7 @@ export function CaseStudyHero({
       );
     },
     image: ({ node }) => {
-      return <PrismicNextImage field={node} alt={(node.alt || "") as ""} />;
+      return <PrismicImage field={node} alt={(node.alt || "") as ""} />;
     },
   };
 
@@ -130,12 +131,12 @@ export function CaseStudyHero({
           >
             <Wrapper.Container fullWidth>
               <div {...stylex.props(styles.imageWrapper)}>
-                <PrismicNextImage
+                <PrismicImage
                   field={heroImage}
                   alt={(heroImage.alt || title || "") as ""}
-                  fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                  style={{
+                  fillParent
+                  imageStyle={{
                     objectFit: "cover",
                     objectPosition: "center",
                   }}

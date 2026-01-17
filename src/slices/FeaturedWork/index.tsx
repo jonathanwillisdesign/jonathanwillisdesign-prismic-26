@@ -7,9 +7,10 @@ import {
   type SliceComponentProps,
   type JSXMapSerializer,
 } from "@prismicio/react";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+import { PrismicNextLink } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
 
+import { PrismicImage } from "@/components/PrismicImage";
 import { Wrapper } from "@/components/slices/Wrapper";
 import {
   spacing,
@@ -183,12 +184,12 @@ const CardItem: FC<CardItemProps> = ({
                   isHovered && styles.imageWrapperHover,
                 )}
               >
-                <PrismicNextImage
+                <PrismicImage
                   field={heroImage}
                   alt={(heroImage.alt || title || "") as ""}
-                  fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  style={{
+                  fillParent
+                  imageStyle={{
                     objectFit: "cover",
                     objectPosition: "center",
                   }}
