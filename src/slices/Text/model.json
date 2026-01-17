@@ -27,14 +27,6 @@
             "allowTargetBlank": true,
             "multi": "strong,em,list-item,paragraph,hyperlink"
           }
-        },
-        "margin": {
-          "type": "Select",
-          "config": {
-            "label": "Margin",
-            "placeholder": "",
-            "options": ["None", "Above", "Below", "Both"]
-          }
         }
       },
       "items": {}

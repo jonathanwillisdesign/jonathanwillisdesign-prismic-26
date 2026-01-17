@@ -28,7 +28,8 @@ type PickContentRelationshipFieldData<
       TSubRelationship["customtypes"],
       TLang
     >;
-  } & { // Group
+  } & // Group
+  {
     [TGroup in Extract<
       TRelationship["fields"][number],
       | prismic.CustomTypeModelFetchGroupLevel1
@@ -40,7 +41,8 @@ type PickContentRelationshipFieldData<
           PickContentRelationshipFieldData<TGroup, TGroupData, TLang>
         >
       : never;
-  } & { // Other fields
+  } & // Other fields
+  {
     [TFieldKey in Extract<
       TRelationship["fields"][number],
       string
@@ -568,16 +570,6 @@ export interface ImageBlockSliceDefaultPrimary {
    * - **Documentation**: https://prismic.io/docs/fields/image
    */
   image: prismic.ImageField<never>;
-
-  /**
-   * Margin field in *Image → Full Width → Primary*
-   *
-   * - **Field Type**: Select
-   * - **Placeholder**: *None*
-   * - **API ID Path**: image_block.default.primary.margin
-   * - **Documentation**: https://prismic.io/docs/fields/select
-   */
-  margin: prismic.SelectField<"None" | "Above" | "Below" | "Both">;
 }
 
 /**
@@ -678,16 +670,6 @@ export interface TextBlockSliceDefaultPrimary {
    * - **Documentation**: https://prismic.io/docs/fields/rich-text
    */
   detail: prismic.RichTextField;
-
-  /**
-   * Margin field in *Text → Default → Primary*
-   *
-   * - **Field Type**: Select
-   * - **Placeholder**: *None*
-   * - **API ID Path**: text_block.default.primary.margin
-   * - **Documentation**: https://prismic.io/docs/fields/select
-   */
-  margin: prismic.SelectField<"None" | "Above" | "Below" | "Both">;
 }
 
 /**

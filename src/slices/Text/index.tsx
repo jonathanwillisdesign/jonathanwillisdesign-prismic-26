@@ -25,30 +25,14 @@ export type TextBlockProps = SliceComponentProps<Content.TextBlockSlice>;
  * Component for "TextBlock" Slices.
  */
 const styles = stylex.create({
+  root: {
+    marginTop: spacing["4xl"],
+    marginBottom: spacing["4xl"],
+  },
   richText: {
     display: "grid",
     rowGap: spacing.md,
     color: colors.foregroundSecondary,
-  },
-  defaultMargin: {
-    marginTop: spacing.md,
-    marginBottom: spacing.md,
-  },
-  marginNone: {
-    marginTop: 0,
-    marginBottom: 0,
-  },
-  marginAbove: {
-    marginTop: spacing.xl,
-    marginBottom: spacing.md,
-  },
-  marginBelow: {
-    marginTop: spacing.md,
-    marginBottom: spacing.xl,
-  },
-  marginBoth: {
-    marginTop: spacing.xl,
-    marginBottom: spacing.xl,
   },
   list: {
     paddingInlineStart: "1.1em",
@@ -85,22 +69,8 @@ const components: JSXMapSerializer = {
 };
 
 const TextBlock: FC<TextBlockProps> = ({ slice }) => {
-  const marginValue = slice.primary.margin || "None";
-  const marginKey = marginValue.toLowerCase() as
-    | "none"
-    | "above"
-    | "below"
-    | "both";
-
-  const marginStyles = {
-    none: styles.marginNone,
-    above: styles.marginAbove,
-    below: styles.marginBelow,
-    both: styles.marginBoth,
-  };
-
   return (
-    <div {...stylex.props(marginStyles[marginKey] || styles.defaultMargin)}>
+    <div {...stylex.props(styles.root)}>
       <Wrapper.Root
         data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}

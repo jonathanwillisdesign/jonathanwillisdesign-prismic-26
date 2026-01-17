@@ -19,10 +19,18 @@ export type ImageBlockProps = SliceComponentProps<Content.ImageBlockSlice>;
  * Component for "ImageBlock" Slices.
  */
 const styles = stylex.create({
+  root: {
+    marginTop: spacing["2xl"],
+    marginBottom: spacing["2xl"],
+  },
   single: {
     display: "grid",
-    borderRadius: 16,
+    width: "100%",
+    maxWidth: "100%",
+    height: "600px",
+    maxHeight: "600px",
     overflow: "hidden",
+    position: "relative",
   },
   sideBySide: {
     display: "grid",
@@ -31,49 +39,27 @@ const styles = stylex.create({
   },
   item: {
     display: "grid",
-    borderRadius: 16,
+    width: "100%",
+    maxWidth: "100%",
+    height: "600px",
+    maxHeight: "600px",
     overflow: "hidden",
+    position: "relative",
   },
-  defaultMargin: {
-    marginTop: spacing.md,
-    marginBottom: spacing.md,
-  },
-  marginNone: {
-    marginTop: 0,
-    marginBottom: 0,
-  },
-  marginAbove: {
-    marginTop: spacing.xl,
-    marginBottom: spacing.md,
-  },
-  marginBelow: {
-    marginTop: spacing.md,
-    marginBottom: spacing.xl,
-  },
-  marginBoth: {
-    marginTop: spacing.xl,
-    marginBottom: spacing.xl,
+  imageWrapper: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
   },
 });
 
 const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
   const isSideBySide = (slice.variation as string) === "sideBySide";
-  const marginValue = slice.primary.margin || "None";
-  const marginKey = marginValue.toLowerCase() as
-    | "none"
-    | "above"
-    | "below"
-    | "both";
-
-  const marginStyles = {
-    none: styles.marginNone,
-    above: styles.marginAbove,
-    below: styles.marginBelow,
-    both: styles.marginBoth,
-  };
 
   return (
-    <div {...stylex.props(marginStyles[marginKey] || styles.defaultMargin)}>
+    <div {...stylex.props(styles.root)}>
       <Wrapper.Root
         data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}
@@ -93,10 +79,19 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                     delay: 0.1,
                   }}
                 >
-                  <PrismicNextImage
-                    field={slice.primary.image}
-                    alt={(slice.primary.image.alt || "") as ""}
-                  />
+                  <div {...stylex.props(styles.imageWrapper)}>
+                    <PrismicNextImage
+                      field={slice.primary.image}
+                      alt={(slice.primary.image.alt || "") as ""}
+                      imgixParams={{ fit: "crop" }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center",
+                      }}
+                    />
+                  </div>
                 </motion.div>
               )}
               {"image_2" in slice.primary &&
@@ -114,10 +109,19 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                       delay: 0.2,
                     }}
                   >
-                    <PrismicNextImage
-                      field={(slice.primary as any).image_2}
-                      alt={(((slice.primary as any).image_2?.alt || "") as "")}
-                    />
+                    <div {...stylex.props(styles.imageWrapper)}>
+                      <PrismicNextImage
+                        field={(slice.primary as any).image_2}
+                        alt={(((slice.primary as any).image_2?.alt || "") as "")}
+                        imgixParams={{ fit: "crop" }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                      />
+                    </div>
                   </motion.div>
                 )}
             </div>
@@ -133,10 +137,19 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                   ease: [0.16, 1, 0.3, 1],
                 }}
               >
-                <PrismicNextImage
-                  field={slice.primary.image}
-                  alt={(slice.primary.image.alt || "") as ""}
-                />
+                <div {...stylex.props(styles.imageWrapper)}>
+                  <PrismicNextImage
+                    field={slice.primary.image}
+                    alt={(slice.primary.image.alt || "") as ""}
+                    imgixParams={{ fit: "crop" }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "center",
+                    }}
+                  />
+                </div>
               </motion.div>
             )
           )}

@@ -19,14 +19,6 @@
             "constraint": {},
             "thumbnails": []
           }
-        },
-        "margin": {
-          "type": "Select",
-          "config": {
-            "label": "Margin",
-            "placeholder": "",
-            "options": ["None", "Above", "Below", "Both"]
-          }
         }
       },
       "items": {}

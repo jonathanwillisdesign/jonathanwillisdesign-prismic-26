@@ -23,8 +23,8 @@ const styles = stylex.create({
     color: colors.foregroundSecondary,
   },
   root: {
-    marginTop: spacing.md,
-    marginBottom: spacing.md,
+    marginTop: spacing["4xl"],
+    marginBottom: spacing["4xl"],
   },
   list: {
     paddingInlineStart: "1.1em",
