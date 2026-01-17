@@ -182,6 +182,8 @@ const CardItem: FC<CardItemProps> = ({
                 {...stylex.props(
                   styles.imageWrapper,
                   isHovered && styles.imageWrapperHover,
+                  animationStyles.fadeInScale,
+                  isVisible && animationStyles.fadeInScaleAnimated,
                 )}
               >
                 <PrismicImage
