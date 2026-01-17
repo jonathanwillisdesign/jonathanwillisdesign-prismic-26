@@ -4,7 +4,7 @@ import { useState } from "react";
 import * as stylex from "@stylexjs/stylex";
 import { Dialog } from "@base-ui/react/dialog";
 import { PrismicNextLink } from "@prismicio/next";
-import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
+import { colors, spacing } from "@/styles/theme.stylex";
 
 const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
 
@@ -166,33 +166,19 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header
-      {...stylex.props(
-        headerStyles.header,
-        animationStyles.fadeDown,
-        animationStyles.fadeDownAnimated,
-      )}
-    >
+    <header {...stylex.props(headerStyles.header)}>
       <div {...stylex.props(headerStyles.container)}>
         <PrismicNextLink
           href="/"
           {...stylex.props(
             headerStyles.logo,
-            animationStyles.fadeIn,
-            animationStyles.delay1,
-            animationStyles.fadeInAnimated,
           )}
           onClick={() => setIsMenuOpen(false)}
         >
           Jonathan Willis
         </PrismicNextLink>
         <nav
-          {...stylex.props(
-            headerStyles.nav,
-            animationStyles.fadeIn,
-            animationStyles.delay2,
-            animationStyles.fadeInAnimated,
-          )}
+          {...stylex.props(headerStyles.nav)}
         >
           <PrismicNextLink href="/about" {...stylex.props(headerStyles.navLink)}>
             About
