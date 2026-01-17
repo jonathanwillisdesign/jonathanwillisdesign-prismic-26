@@ -58,12 +58,13 @@ const headerStyles = stylex.create({
       width: "40px",
       height: "40px",
       backgroundColor: colors.backgroundSecondary,
-      border: `1px solid ${colors.border}`,
+      border: "none",
       borderRadius: "999px",
       color: colors.foreground,
       cursor: "pointer",
       padding: spacing.sm,
       zIndex: 2,
+      overflow: "visible",
       transition:
         "opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease",
       ":hover": {
@@ -75,6 +76,7 @@ const headerStyles = stylex.create({
     width: "24px",
     height: "24px",
     display: "block",
+    overflow: "visible",
   },
   burgerCircle: {
     transformOrigin: "center",
@@ -121,12 +123,14 @@ const headerStyles = stylex.create({
   },
   dialogPopup: {
     width: "100%",
+    height: "calc(100dvh - 72px)",
     backgroundColor: colors.background,
     borderBottom: `1px solid ${colors.border}`,
     padding: spacing.lg,
     display: "flex",
     flexDirection: "column",
     gap: spacing.md,
+    overflowY: "auto",
     transition:
       "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
     transform: "translateY(0)",
@@ -140,13 +144,6 @@ const headerStyles = stylex.create({
       transform: "translateY(-8px)",
       opacity: 0,
     },
-  },
-  dialogTitle: {
-    fontSize: "14px",
-    fontWeight: 600,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-    color: colors.foregroundMuted,
   },
   mobileNav: {
     display: "flex",
@@ -237,9 +234,6 @@ export default function Header() {
             <Dialog.Backdrop {...stylex.props(headerStyles.dialogBackdrop)} />
             <Dialog.Viewport {...stylex.props(headerStyles.dialogViewport)}>
               <Dialog.Popup {...stylex.props(headerStyles.dialogPopup)}>
-                <Dialog.Title {...stylex.props(headerStyles.dialogTitle)}>
-                  Menu
-                </Dialog.Title>
                 <nav {...stylex.props(headerStyles.mobileNav)}>
                   <PrismicNextLink
                     href="/about"
