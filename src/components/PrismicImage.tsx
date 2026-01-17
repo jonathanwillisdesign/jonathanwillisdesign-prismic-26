@@ -42,7 +42,7 @@ const styles = stylex.create({
   },
   image: {
     opacity: 0,
-    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+    transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
     "@media (prefers-reduced-motion: reduce)": {
       transition: "none",
     },
@@ -55,7 +55,7 @@ const styles = stylex.create({
     inset: 0,
     backgroundColor: colors.backgroundSecondary,
     opacity: 1,
-    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+    transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
     "@media (prefers-reduced-motion: reduce)": {
       transition: "none",
     },
