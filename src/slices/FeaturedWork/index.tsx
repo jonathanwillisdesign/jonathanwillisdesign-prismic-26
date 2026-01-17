@@ -142,7 +142,7 @@ const CardItem: FC<CardItemProps> = ({
   heroImage,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { ref, isVisible } = useScrollAnimation({
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
     once: true,
     margin: "-50px",
   });

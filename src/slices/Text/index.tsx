@@ -69,7 +69,7 @@ const components: JSXMapSerializer = {
 };
 
 const TextBlock: FC<TextBlockProps> = ({ slice }) => {
-  const { ref, isVisible } = useScrollAnimation({
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
     once: true,
     margin: "-50px",
   });

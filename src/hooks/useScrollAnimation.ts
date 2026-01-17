@@ -12,10 +12,12 @@ interface UseScrollAnimationOptions {
  * Hook for scroll-triggered animations using Intersection Observer.
  * Replaces Motion's `whileInView` functionality with CSS animations.
  */
-export function useScrollAnimation(options: UseScrollAnimationOptions = {}) {
+export function useScrollAnimation<T extends HTMLElement = HTMLElement>(
+  options: UseScrollAnimationOptions = {},
+) {
   const { once = true, margin = "-50px", threshold = 0 } = options;
   const [isVisible, setIsVisible] = useState(false);
-  const elementRef = useRef<HTMLElement>(null);
+  const elementRef = useRef<T>(null);
 
   useEffect(() => {
     const element = elementRef.current;

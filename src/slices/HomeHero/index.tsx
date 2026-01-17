@@ -80,9 +80,9 @@ const styles = stylex.create({
 });
 
 const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
-  const headshotRef = useScrollAnimation({ once: true });
-  const statementRef = useScrollAnimation({ once: true });
-  const linksRef = useScrollAnimation({ once: true });
+  const headshotRef = useScrollAnimation<HTMLDivElement>({ once: true });
+  const statementRef = useScrollAnimation<HTMLDivElement>({ once: true });
+  const linksRef = useScrollAnimation<HTMLDivElement>({ once: true });
 
   return (
     <div {...stylex.props(styles.root)}>
@@ -100,7 +100,8 @@ const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
                     styles.media,
                     animationStyles.fadeInScaleSmall,
                     animationStyles.delay1,
-                    headshotRef.isVisible && animationStyles.fadeInScaleSmallAnimated,
+                    headshotRef.isVisible &&
+                      animationStyles.fadeInScaleSmallAnimated,
                   )}
                 >
                   <PrismicNextImage

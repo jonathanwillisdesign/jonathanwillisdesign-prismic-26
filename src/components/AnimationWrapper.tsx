@@ -40,13 +40,14 @@ export function AnimationWrapper({
   className,
   style,
 }: AnimationWrapperProps) {
-  const { ref, isVisible } = useScrollAnimation({
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
     once: true,
     margin: "-50px",
   });
 
   const baseStyle = variantStyles[variant];
-  const animatedStyle = variantStyles[`${variant}Animated` as keyof typeof variantStyles];
+  const animatedStyle =
+    variantStyles[`${variant}Animated` as keyof typeof variantStyles];
   const delayStyle = delayStyles[delay];
 
   return (

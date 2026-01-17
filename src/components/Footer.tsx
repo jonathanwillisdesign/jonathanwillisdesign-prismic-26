@@ -43,9 +43,18 @@ const footerStyles = stylex.create({
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const footerRef = useScrollAnimation({ once: true, margin: "-50px" });
-  const linksRef = useScrollAnimation({ once: true, margin: "-50px" });
-  const textRef = useScrollAnimation({ once: true, margin: "-50px" });
+  const footerRef = useScrollAnimation<HTMLElement>({
+    once: true,
+    margin: "-50px",
+  });
+  const linksRef = useScrollAnimation<HTMLDivElement>({
+    once: true,
+    margin: "-50px",
+  });
+  const textRef = useScrollAnimation<HTMLParagraphElement>({
+    once: true,
+    margin: "-50px",
+  });
 
   return (
     <footer

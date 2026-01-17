@@ -66,9 +66,18 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
   const variation = slice.variation as string;
   const isSideBySide = variation === "sideBySide";
   const isStacked = variation === "stacked";
-  const image1Ref = useScrollAnimation({ once: true, margin: "-50px" });
-  const image2Ref = useScrollAnimation({ once: true, margin: "-50px" });
-  const singleImageRef = useScrollAnimation({ once: true, margin: "-50px" });
+  const image1Ref = useScrollAnimation<HTMLDivElement>({
+    once: true,
+    margin: "-50px",
+  });
+  const image2Ref = useScrollAnimation<HTMLDivElement>({
+    once: true,
+    margin: "-50px",
+  });
+  const singleImageRef = useScrollAnimation<HTMLDivElement>({
+    once: true,
+    margin: "-50px",
+  });
 
   return (
     <div {...stylex.props(styles.root)}>
@@ -105,22 +114,21 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                 </div>
               )}
               {"image_2" in slice.primary &&
-                isFilled.image(
-                  (slice.primary as any).image_2
-                ) && (
+                isFilled.image((slice.primary as any).image_2) && (
                   <div
                     ref={image2Ref.ref}
                     {...stylex.props(
                       styles.item,
                       animationStyles.fadeInScale,
                       animationStyles.delay2,
-                      image2Ref.isVisible && animationStyles.fadeInScaleAnimated,
+                      image2Ref.isVisible &&
+                        animationStyles.fadeInScaleAnimated,
                     )}
                   >
                     <div {...stylex.props(styles.imageWrapper)}>
                       <PrismicNextImage
                         field={(slice.primary as any).image_2}
-                        alt={(((slice.primary as any).image_2?.alt || "") as "")}
+                        alt={((slice.primary as any).image_2?.alt || "") as ""}
                         imgixParams={{ fit: "crop" }}
                         style={{
                           width: "100%",
@@ -161,22 +169,21 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                 </div>
               )}
               {"image_2" in slice.primary &&
-                isFilled.image(
-                  (slice.primary as any).image_2
-                ) && (
+                isFilled.image((slice.primary as any).image_2) && (
                   <div
                     ref={image2Ref.ref}
                     {...stylex.props(
                       styles.item,
                       animationStyles.fadeInScale,
                       animationStyles.delay2,
-                      image2Ref.isVisible && animationStyles.fadeInScaleAnimated,
+                      image2Ref.isVisible &&
+                        animationStyles.fadeInScaleAnimated,
                     )}
                   >
                     <div {...stylex.props(styles.imageWrapper)}>
                       <PrismicNextImage
                         field={(slice.primary as any).image_2}
-                        alt={(((slice.primary as any).image_2?.alt || "") as "")}
+                        alt={((slice.primary as any).image_2?.alt || "") as ""}
                         imgixParams={{ fit: "crop" }}
                         style={{
                           width: "100%",
@@ -196,7 +203,8 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                 {...stylex.props(
                   styles.single,
                   animationStyles.fadeInScale,
-                  singleImageRef.isVisible && animationStyles.fadeInScaleAnimated,
+                  singleImageRef.isVisible &&
+                    animationStyles.fadeInScaleAnimated,
                 )}
               >
                 <div {...stylex.props(styles.imageWrapper)}>

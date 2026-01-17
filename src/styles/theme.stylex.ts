@@ -63,7 +63,8 @@ export const animationStyles = stylex.create({
   fadeUp: {
     opacity: 0,
     transform: "translateY(20px)",
-    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+    transition:
+      "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
   },
   // Fade Up - animated state
   fadeUpAnimated: {
@@ -83,7 +84,8 @@ export const animationStyles = stylex.create({
   fadeInScale: {
     opacity: 0,
     transform: "scale(0.95)",
-    transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+    transition:
+      "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
   },
   // Fade In with Scale - animated state
   fadeInScaleAnimated: {
@@ -94,7 +96,8 @@ export const animationStyles = stylex.create({
   fadeInScaleSmall: {
     opacity: 0,
     transform: "scale(0.8)",
-    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+    transition:
+      "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
   },
   // Fade In with Scale Small - animated state
   fadeInScaleSmallAnimated: {
@@ -105,7 +108,8 @@ export const animationStyles = stylex.create({
   fadeDown: {
     opacity: 0,
     transform: "translateY(-20px)",
-    transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+    transition:
+      "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
   },
   // Fade Down - animated state
   fadeDownAnimated: {

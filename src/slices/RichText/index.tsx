@@ -79,7 +79,7 @@ type RichTextProps = SliceComponentProps<Content.RichTextSlice>;
  * Component for "RichText" Slices.
  */
 const RichText: FC<RichTextProps> = ({ slice }) => {
-  const { ref, isVisible } = useScrollAnimation({
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
     once: true,
     margin: "-50px",
   });
