@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import * as stylex from "@stylexjs/stylex";
-import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
+import { Dialog } from "@base-ui/react/dialog";
+import { List, X } from "@phosphor-icons/react";
+import { PrismicNextLink } from "@prismicio/next";
+import { colors, spacing } from "@/styles/theme.stylex";
 
 const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
 
@@ -11,7 +14,12 @@ const headerStyles = stylex.create({
     width: "100%",
     borderBottom: `1px solid ${colors.border}`,
     backgroundColor: colors.background,
-    position: "relative",
+    position: "sticky",
+    top: 0,
+    zIndex: 100,
+    // Keep sticky header on its own layer to avoid repaint flicker on navigation/scroll.
+    transform: "translateZ(0)",
+    backfaceVisibility: "hidden",
   },
   container: {
     maxWidth: "1200px",
@@ -49,61 +57,101 @@ const headerStyles = stylex.create({
     display: "none",
     [MOBILE_BREAKPOINT]: {
       display: "flex",
-      flexDirection: "column",
-      gap: "4px",
-      background: "none",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "40px",
+      height: "40px",
       border: "none",
+      borderRadius: "999px",
+      backgroundColor: "transparent",
+      color: colors.foreground,
       cursor: "pointer",
       padding: spacing.sm,
       zIndex: 2,
+      overflow: "visible",
       transition: "opacity 0.2s ease",
+      outline: "none",
+      boxShadow: "none",
+      WebkitTapHighlightColor: "transparent",
+      appearance: "none",
+      WebkitAppearance: "none",
+      MozAppearance: "none",
       ":hover": {
         opacity: 0.7,
       },
+      ":focus": {
+        outline: "none",
+      },
+      ":focus-visible": {
+        outline: "none",
+        boxShadow: "none",
+      },
     },
   },
-  burgerLine: {
+  icon: {
     width: "24px",
-    height: "2px",
-    backgroundColor: colors.foreground,
-    transition: "all 0.3s ease",
-    transformOrigin: "center",
+    height: "24px",
+    display: "block",
   },
-  burgerLineOpen1: {
-    transform: "rotate(45deg) translate(5px, 5px)",
-  },
-  burgerLineOpen2: {
-    opacity: 0,
-  },
-  burgerLineOpen3: {
-    transform: "rotate(-45deg) translate(7px, -6px)",
-  },
-  mobileMenu: {
+  dialogBackdrop: {
     display: "none",
+    position: "fixed",
+    inset: 0,
+    zIndex: 80,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    [MOBILE_BREAKPOINT]: {
+      display: "block",
+    },
+    opacity: 1,
+    transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+    ":is([data-starting-style])": {
+      opacity: 0,
+    },
+    ":is([data-ending-style])": {
+      opacity: 0,
+    },
+  },
+  dialogViewport: {
+    display: "none",
+    position: "fixed",
+    inset: 0,
+    zIndex: 90,
+    alignItems: "flex-start",
+    justifyContent: "stretch",
+    paddingTop: "72px",
     [MOBILE_BREAKPOINT]: {
       display: "flex",
-      flexDirection: "column",
-      position: "absolute",
-      top: "100%",
-      left: 0,
-      right: 0,
-      backgroundColor: colors.background,
-      borderTop: `1px solid ${colors.border}`,
-      padding: spacing.lg,
-      gap: spacing.md,
-      zIndex: 1,
-      transform: "translateY(-100%)",
+    },
+    pointerEvents: "none",
+  },
+  dialogPopup: {
+    width: "100%",
+    height: "calc(100dvh - 72px)",
+    backgroundColor: colors.background,
+    borderBottom: `1px solid ${colors.border}`,
+    padding: spacing.lg,
+    display: "flex",
+    flexDirection: "column",
+    gap: spacing.md,
+    overflowY: "auto",
+    transition:
+      "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+    transform: "translateY(0)",
+    opacity: 1,
+    pointerEvents: "auto",
+    ":is([data-starting-style])": {
+      transform: "translateY(-12px)",
       opacity: 0,
-      visibility: "hidden",
-      transition: "all 0.3s ease",
+    },
+    ":is([data-ending-style])": {
+      transform: "translateY(-8px)",
+      opacity: 0,
     },
   },
-  mobileMenuOpen: {
-    [MOBILE_BREAKPOINT]: {
-      transform: "translateY(0)",
-      opacity: 1,
-      visibility: "visible",
-    },
+  mobileNav: {
+    display: "flex",
+    flexDirection: "column",
+    gap: spacing.md,
   },
   mobileNavLink: {
     color: colors.foregroundSecondary,
@@ -120,95 +168,69 @@ const headerStyles = stylex.create({
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
   return (
-    <header
-      {...stylex.props(
-        headerStyles.header,
-        animationStyles.fadeDown,
-        animationStyles.fadeDownAnimated,
-      )}
-    >
+    <header {...stylex.props(headerStyles.header)}>
       <div {...stylex.props(headerStyles.container)}>
-        <a
+        <PrismicNextLink
           href="/"
           {...stylex.props(
             headerStyles.logo,
-            animationStyles.fadeIn,
-            animationStyles.delay1,
-            animationStyles.fadeInAnimated,
           )}
+          onClick={() => setIsMenuOpen(false)}
         >
           Jonathan Willis
-        </a>
+        </PrismicNextLink>
         <nav
-          {...stylex.props(
-            headerStyles.nav,
-            animationStyles.fadeIn,
-            animationStyles.delay2,
-            animationStyles.fadeInAnimated,
-          )}
+          {...stylex.props(headerStyles.nav)}
         >
-          <a href="/about" {...stylex.props(headerStyles.navLink)}>
+          <PrismicNextLink href="/about" {...stylex.props(headerStyles.navLink)}>
             About
-          </a>
-          <a href="/contact" {...stylex.props(headerStyles.navLink)}>
+          </PrismicNextLink>
+          <PrismicNextLink
+            href="/contact"
+            {...stylex.props(headerStyles.navLink)}
+          >
             Contact
-          </a>
+          </PrismicNextLink>
         </nav>
-        <button
-          {...stylex.props(headerStyles.burgerButton)}
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          <span
-            {...stylex.props(
-              headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen1,
+        <Dialog.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <Dialog.Trigger
+            {...stylex.props(headerStyles.burgerButton)}
+            type="button"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {isMenuOpen ? (
+              <X aria-hidden="true" {...stylex.props(headerStyles.icon)} />
+            ) : (
+              <List aria-hidden="true" {...stylex.props(headerStyles.icon)} />
             )}
-          />
-          <span
-            {...stylex.props(
-              headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen2,
-            )}
-          />
-          <span
-            {...stylex.props(
-              headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen3,
-            )}
-          />
-        </button>
+          </Dialog.Trigger>
+
+          <Dialog.Portal>
+            <Dialog.Backdrop {...stylex.props(headerStyles.dialogBackdrop)} />
+            <Dialog.Viewport {...stylex.props(headerStyles.dialogViewport)}>
+              <Dialog.Popup {...stylex.props(headerStyles.dialogPopup)}>
+                <nav {...stylex.props(headerStyles.mobileNav)}>
+                  <PrismicNextLink
+                    href="/about"
+                    {...stylex.props(headerStyles.mobileNavLink)}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    About
+                  </PrismicNextLink>
+                  <PrismicNextLink
+                    href="/contact"
+                    {...stylex.props(headerStyles.mobileNavLink)}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Contact
+                  </PrismicNextLink>
+                </nav>
+              </Dialog.Popup>
+            </Dialog.Viewport>
+          </Dialog.Portal>
+        </Dialog.Root>
       </div>
-      <nav
-        {...stylex.props(
-          headerStyles.mobileMenu,
-          isMenuOpen && headerStyles.mobileMenuOpen,
-        )}
-      >
-        <a
-          href="/about"
-          {...stylex.props(headerStyles.mobileNavLink)}
-          onClick={closeMenu}
-        >
-          About
-        </a>
-        <a
-          href="/contact"
-          {...stylex.props(headerStyles.mobileNavLink)}
-          onClick={closeMenu}
-        >
-          Contact
-        </a>
-      </nav>
     </header>
   );
 }
