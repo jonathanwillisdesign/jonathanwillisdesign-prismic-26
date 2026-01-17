@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import * as stylex from "@stylexjs/stylex";
 import { animationStyles } from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -40,6 +40,12 @@ export function AnimationWrapper({
   className,
   style,
 }: AnimationWrapperProps) {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
     once: true,
     margin: "-50px",
@@ -57,7 +63,7 @@ export function AnimationWrapper({
         baseStyle,
         delayStyle,
         scrollTrigger && isVisible && animatedStyle,
-        !scrollTrigger && animatedStyle, // If not scroll-triggered, animate immediately
+        !scrollTrigger && hasMounted && animatedStyle, // animate after mount (no observer)
         style,
       )}
       className={className}

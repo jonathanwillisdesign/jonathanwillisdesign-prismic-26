@@ -5,11 +5,12 @@ import { isFilled } from "@prismicio/client";
 import { PrismicNextLink } from "@prismicio/next";
 import { PrismicRichText, type JSXMapSerializer } from "@prismicio/react";
 
+import { AnimationWrapper } from "@/components/AnimationWrapper";
 import { PrismicImage } from "@/components/PrismicImage";
 import { Wrapper } from "@/components/slices/Wrapper";
 import { linkStyles } from "@/components/slices/Link";
 import { Text } from "@/components/slices/Text";
-import { spacing, animationStyles } from "@/styles/theme.stylex";
+import { spacing } from "@/styles/theme.stylex";
 
 type CaseStudyHeroProps = {
   title: string | null | undefined;
@@ -86,48 +87,32 @@ export function CaseStudyHero({
   return (
     <Wrapper.Root>
       <div {...stylex.props(styles.hero)}>
-        <div
-          {...stylex.props(
-            styles.header,
-            animationStyles.fadeUp,
-            animationStyles.fadeUpAnimated,
-          )}
-        >
+        <div {...stylex.props(styles.header)}>
           {isFilled.keyText(title) && (
-            <div
-              {...stylex.props(
-                animationStyles.fadeUp,
-                animationStyles.delay1,
-                animationStyles.fadeUpAnimated,
-              )}
-            >
+            <AnimationWrapper delay={1} variant="fadeUp" scrollTrigger={false}>
               <Text.Heading as="h1">{title}</Text.Heading>
-            </div>
+            </AnimationWrapper>
           )}
           {isFilled.richText(description) && (
-            <div
-              {...stylex.props(
-                styles.description,
-                animationStyles.fadeUp,
-                animationStyles.delay2,
-                animationStyles.fadeUpAnimated,
-              )}
+            <AnimationWrapper
+              delay={2}
+              variant="fadeUp"
+              scrollTrigger={false}
+              style={styles.description}
             >
               <PrismicRichText
                 field={description}
                 components={richTextComponents}
               />
-            </div>
+            </AnimationWrapper>
           )}
         </div>
         {isFilled.image(heroImage) && (
-          <div
-            {...stylex.props(
-              styles.heroImage,
-              animationStyles.fadeInScale,
-              animationStyles.delay3,
-              animationStyles.fadeInScaleAnimated,
-            )}
+          <AnimationWrapper
+            delay={3}
+            variant="fadeInScale"
+            scrollTrigger={false}
+            style={styles.heroImage}
           >
             <Wrapper.Container fullWidth>
               <div {...stylex.props(styles.imageWrapper)}>
@@ -143,7 +128,7 @@ export function CaseStudyHero({
                 />
               </div>
             </Wrapper.Container>
-          </div>
+          </AnimationWrapper>
         )}
       </div>
     </Wrapper.Root>
