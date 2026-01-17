@@ -16,6 +16,9 @@ const headerStyles = stylex.create({
     position: "sticky",
     top: 0,
     zIndex: 100,
+    // Keep sticky header on its own layer to avoid repaint flicker on navigation/scroll.
+    transform: "translateZ(0)",
+    backfaceVisibility: "hidden",
   },
   container: {
     maxWidth: "1200px",
@@ -66,8 +69,18 @@ const headerStyles = stylex.create({
       zIndex: 2,
       overflow: "visible",
       transition: "opacity 0.2s ease",
+      outline: "none",
+      boxShadow: "none",
+      WebkitTapHighlightColor: "transparent",
       ":hover": {
         opacity: 0.7,
+      },
+      ":focus": {
+        outline: "none",
+      },
+      ":focus-visible": {
+        outline: "none",
+        boxShadow: "none",
       },
     },
   },
