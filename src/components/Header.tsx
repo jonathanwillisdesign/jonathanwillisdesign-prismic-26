@@ -99,10 +99,10 @@ const headerStyles = stylex.create({
     },
     opacity: 1,
     transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-    "[data-starting-style]": {
+    ":is([data-starting-style])": {
       opacity: 0,
     },
-    "[data-ending-style]": {
+    ":is([data-ending-style])": {
       opacity: 0,
     },
   },
@@ -132,11 +132,11 @@ const headerStyles = stylex.create({
     transform: "translateY(0)",
     opacity: 1,
     pointerEvents: "auto",
-    "[data-starting-style]": {
+    ":is([data-starting-style])": {
       transform: "translateY(-12px)",
       opacity: 0,
     },
-    "[data-ending-style]": {
+    ":is([data-ending-style])": {
       transform: "translateY(-8px)",
       opacity: 0,
     },
