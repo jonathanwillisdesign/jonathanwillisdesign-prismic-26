@@ -103,7 +103,7 @@ const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
                 >
                   <PrismicNextImage
                     field={slice.primary.headshot}
-                    alt={slice.primary.headshot.alt ?? ""}
+                    alt={(slice.primary.headshot.alt || "") as ""}
                     fill
                     sizes="160px"
                     style={{

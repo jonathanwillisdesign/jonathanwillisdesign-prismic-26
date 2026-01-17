@@ -57,7 +57,7 @@ const styles = stylex.create({
 });
 
 const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
-  const isSideBySide = slice.variation === "sideBySide";
+  const isSideBySide = (slice.variation as string) === "sideBySide";
   const marginValue = slice.primary.margin || "None";
   const marginKey = marginValue.toLowerCase() as
     | "none"
@@ -95,28 +95,31 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                 >
                   <PrismicNextImage
                     field={slice.primary.image}
-                    alt={slice.primary.image.alt ?? ""}
+                    alt={(slice.primary.image.alt || "") as ""}
                   />
                 </motion.div>
               )}
-              {isFilled.image(slice.primary.image_2) && (
-                <motion.div
-                  {...stylex.props(styles.item)}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{
-                    duration: 0.6,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: 0.2,
-                  }}
-                >
-                  <PrismicNextImage
-                    field={slice.primary.image_2}
-                    alt={slice.primary.image_2.alt ?? ""}
-                  />
-                </motion.div>
-              )}
+              {"image_2" in slice.primary &&
+                isFilled.image(
+                  (slice.primary as any).image_2
+                ) && (
+                  <motion.div
+                    {...stylex.props(styles.item)}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{
+                      duration: 0.6,
+                      ease: [0.16, 1, 0.3, 1],
+                      delay: 0.2,
+                    }}
+                  >
+                    <PrismicNextImage
+                      field={(slice.primary as any).image_2}
+                      alt={(((slice.primary as any).image_2?.alt || "") as "")}
+                    />
+                  </motion.div>
+                )}
             </div>
           ) : (
             isFilled.image(slice.primary.image) && (
@@ -132,7 +135,7 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
               >
                 <PrismicNextImage
                   field={slice.primary.image}
-                  alt={slice.primary.image.alt ?? ""}
+                  alt={(slice.primary.image.alt || "") as ""}
                 />
               </motion.div>
             )

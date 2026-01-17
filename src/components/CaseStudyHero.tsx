@@ -141,7 +141,7 @@ export function CaseStudyHero({
               <div {...stylex.props(styles.imageWrapper)}>
                 <PrismicNextImage
                   field={heroImage}
-                  alt={heroImage.alt ?? title ?? ""}
+                  alt={(heroImage.alt || title || "") as ""}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
                   style={{
