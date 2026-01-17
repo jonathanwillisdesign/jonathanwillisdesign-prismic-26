@@ -2,7 +2,7 @@
 
 import { type FC } from "react";
 import { type Content, isFilled } from "@prismicio/client";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+import { PrismicNextLink } from "@prismicio/next";
 import {
   PrismicRichText,
   type SliceComponentProps,
@@ -10,6 +10,7 @@ import {
 } from "@prismicio/react";
 import * as stylex from "@stylexjs/stylex";
 
+import { PrismicImage } from "@/components/PrismicImage";
 import { Wrapper } from "@/components/slices/Wrapper";
 import { linkStyles } from "@/components/slices/Link";
 import { Text } from "@/components/slices/Text";
@@ -66,7 +67,7 @@ const components: JSXMapSerializer = {
   ),
   paragraph: ({ children }) => <Text.Body>{children}</Text.Body>,
   image: ({ node }) => {
-    return <PrismicNextImage field={node} alt={(node.alt || "") as ""} />;
+    return <PrismicImage field={node} alt={(node.alt || "") as ""} />;
   },
 };
 

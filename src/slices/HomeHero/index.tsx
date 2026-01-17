@@ -3,9 +3,10 @@
 import { FC } from "react";
 import { Content, isFilled } from "@prismicio/client";
 import { SliceComponentProps } from "@prismicio/react";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+import { PrismicNextLink } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
 
+import { PrismicImage } from "@/components/PrismicImage";
 import { Wrapper } from "@/components/slices/Wrapper";
 import { Text } from "@/components/slices/Text";
 import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
@@ -104,12 +105,12 @@ const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
                       animationStyles.fadeInScaleSmallAnimated,
                   )}
                 >
-                  <PrismicNextImage
+                  <PrismicImage
                     field={slice.primary.headshot}
                     alt={(slice.primary.headshot.alt || "") as ""}
-                    fill
                     sizes="160px"
-                    style={{
+                    fillParent
+                    imageStyle={{
                       objectFit: "cover",
                       objectPosition: "center",
                     }}

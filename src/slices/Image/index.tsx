@@ -3,9 +3,9 @@
 import { FC } from "react";
 import { Content, isFilled } from "@prismicio/client";
 import { SliceComponentProps } from "@prismicio/react";
-import { PrismicNextImage } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
 
+import { PrismicImage } from "@/components/PrismicImage";
 import { Wrapper } from "@/components/slices/Wrapper";
 import { spacing, animationStyles } from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -99,13 +99,12 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                   )}
                 >
                   <div {...stylex.props(styles.imageWrapper)}>
-                    <PrismicNextImage
+                    <PrismicImage
                       field={slice.primary.image}
                       alt={(slice.primary.image.alt || "") as ""}
                       imgixParams={{ fit: "crop" }}
-                      style={{
-                        width: "100%",
-                        height: "100%",
+                      fillParent
+                      imageStyle={{
                         objectFit: "cover",
                         objectPosition: "center",
                       }}
@@ -126,13 +125,12 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                     )}
                   >
                     <div {...stylex.props(styles.imageWrapper)}>
-                      <PrismicNextImage
+                      <PrismicImage
                         field={(slice.primary as any).image_2}
                         alt={((slice.primary as any).image_2?.alt || "") as ""}
                         imgixParams={{ fit: "crop" }}
-                        style={{
-                          width: "100%",
-                          height: "100%",
+                        fillParent
+                        imageStyle={{
                           objectFit: "cover",
                           objectPosition: "center",
                         }}
@@ -154,13 +152,12 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                   )}
                 >
                   <div {...stylex.props(styles.imageWrapper)}>
-                    <PrismicNextImage
+                    <PrismicImage
                       field={slice.primary.image}
                       alt={(slice.primary.image.alt || "") as ""}
                       imgixParams={{ fit: "crop" }}
-                      style={{
-                        width: "100%",
-                        height: "100%",
+                      fillParent
+                      imageStyle={{
                         objectFit: "cover",
                         objectPosition: "center",
                       }}
@@ -181,13 +178,12 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                     )}
                   >
                     <div {...stylex.props(styles.imageWrapper)}>
-                      <PrismicNextImage
+                      <PrismicImage
                         field={(slice.primary as any).image_2}
                         alt={((slice.primary as any).image_2?.alt || "") as ""}
                         imgixParams={{ fit: "crop" }}
-                        style={{
-                          width: "100%",
-                          height: "100%",
+                        fillParent
+                        imageStyle={{
                           objectFit: "cover",
                           objectPosition: "center",
                         }}
@@ -208,13 +204,12 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
                 )}
               >
                 <div {...stylex.props(styles.imageWrapper)}>
-                  <PrismicNextImage
+                  <PrismicImage
                     field={slice.primary.image}
                     alt={(slice.primary.image.alt || "") as ""}
                     imgixParams={{ fit: "crop" }}
-                    style={{
-                      width: "100%",
-                      height: "100%",
+                    fillParent
+                    imageStyle={{
                       objectFit: "cover",
                       objectPosition: "center",
                     }}

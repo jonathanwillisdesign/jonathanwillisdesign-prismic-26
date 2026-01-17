@@ -7,9 +7,11 @@ import {
   type SliceComponentProps,
   type JSXMapSerializer,
 } from "@prismicio/react";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+import { PrismicNextLink } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
 
+import { AnimationWrapper } from "@/components/AnimationWrapper";
+import { PrismicImage } from "@/components/PrismicImage";
 import { Wrapper } from "@/components/slices/Wrapper";
 import {
   spacing,
@@ -110,15 +112,19 @@ const styles = stylex.create({
     height: "360px",
     overflow: "hidden",
   },
-  imageWrapper: {
+  imageOuter: {
     position: "absolute",
     top: 0,
     left: 0,
     width: "100%",
     height: "100%",
+  },
+  imageInner: {
+    position: "absolute",
+    inset: 0,
     transition: "transform 0.5s ease",
   },
-  imageWrapperHover: {
+  imageInnerHover: {
     transform: "scale(1.05)",
   },
   titleContainer: {
@@ -177,23 +183,29 @@ const CardItem: FC<CardItemProps> = ({
         >
           {isFilled.image(heroImage) && (
             <div {...stylex.props(styles.imageColumn)}>
-              <div
-                {...stylex.props(
-                  styles.imageWrapper,
-                  isHovered && styles.imageWrapperHover,
-                )}
+              <AnimationWrapper
+                variant="fadeInScale"
+                scrollTrigger
+                style={styles.imageOuter}
               >
-                <PrismicNextImage
-                  field={heroImage}
-                  alt={(heroImage.alt || title || "") as ""}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  style={{
-                    objectFit: "cover",
-                    objectPosition: "center",
-                  }}
-                />
-              </div>
+                <div
+                  {...stylex.props(
+                    styles.imageInner,
+                    isHovered && styles.imageInnerHover,
+                  )}
+                >
+                  <PrismicImage
+                    field={heroImage}
+                    alt={(heroImage.alt || title || "") as ""}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    fillParent
+                    imageStyle={{
+                      objectFit: "cover",
+                      objectPosition: "center",
+                    }}
+                  />
+                </div>
+              </AnimationWrapper>
             </div>
           )}
           <div {...stylex.props(styles.textColumn)}>

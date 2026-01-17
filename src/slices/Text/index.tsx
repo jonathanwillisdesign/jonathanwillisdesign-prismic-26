@@ -7,9 +7,10 @@ import {
   SliceComponentProps,
   type JSXMapSerializer,
 } from "@prismicio/react";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+import { PrismicNextLink } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
 
+import { PrismicImage } from "@/components/PrismicImage";
 import { Wrapper } from "@/components/slices/Wrapper";
 import { linkStyles } from "@/components/slices/Link";
 import { Text } from "@/components/slices/Text";
@@ -64,7 +65,7 @@ const components: JSXMapSerializer = {
   strong: ({ children }) => <strong>{children}</strong>,
   em: ({ children }) => <em>{children}</em>,
   image: ({ node }) => {
-    return <PrismicNextImage field={node} alt={(node.alt || "") as ""} />;
+    return <PrismicImage field={node} alt={(node.alt || "") as ""} />;
   },
 };
 
