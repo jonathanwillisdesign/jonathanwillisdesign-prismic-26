@@ -37,6 +37,13 @@ const styles = stylex.create({
     gap: spacing.lg,
     gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
   },
+  stacked: {
+    display: "grid",
+    gap: spacing.lg,
+    gridTemplateColumns: "1fr 1fr",
+    width: "100%",
+    maxWidth: "100%",
+  },
   item: {
     display: "grid",
     width: "100%",
@@ -56,7 +63,9 @@ const styles = stylex.create({
 });
 
 const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
-  const isSideBySide = (slice.variation as string) === "sideBySide";
+  const variation = slice.variation as string;
+  const isSideBySide = variation === "sideBySide";
+  const isStacked = variation === "stacked";
   const image1Ref = useScrollAnimation({ once: true, margin: "-50px" });
   const image2Ref = useScrollAnimation({ once: true, margin: "-50px" });
   const singleImageRef = useScrollAnimation({ once: true, margin: "-50px" });
@@ -70,6 +79,62 @@ const ImageBlock: FC<ImageBlockProps> = ({ slice }) => {
         <Wrapper.Container>
           {isSideBySide ? (
             <div {...stylex.props(styles.sideBySide)}>
+              {isFilled.image(slice.primary.image) && (
+                <div
+                  ref={image1Ref.ref}
+                  {...stylex.props(
+                    styles.item,
+                    animationStyles.fadeInScale,
+                    animationStyles.delay1,
+                    image1Ref.isVisible && animationStyles.fadeInScaleAnimated,
+                  )}
+                >
+                  <div {...stylex.props(styles.imageWrapper)}>
+                    <PrismicNextImage
+                      field={slice.primary.image}
+                      alt={(slice.primary.image.alt || "") as ""}
+                      imgixParams={{ fit: "crop" }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center",
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+              {"image_2" in slice.primary &&
+                isFilled.image(
+                  (slice.primary as any).image_2
+                ) && (
+                  <div
+                    ref={image2Ref.ref}
+                    {...stylex.props(
+                      styles.item,
+                      animationStyles.fadeInScale,
+                      animationStyles.delay2,
+                      image2Ref.isVisible && animationStyles.fadeInScaleAnimated,
+                    )}
+                  >
+                    <div {...stylex.props(styles.imageWrapper)}>
+                      <PrismicNextImage
+                        field={(slice.primary as any).image_2}
+                        alt={(((slice.primary as any).image_2?.alt || "") as "")}
+                        imgixParams={{ fit: "crop" }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+            </div>
+          ) : isStacked ? (
+            <div {...stylex.props(styles.stacked)}>
               {isFilled.image(slice.primary.image) && (
                 <div
                   ref={image1Ref.ref}

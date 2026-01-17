@@ -586,9 +586,47 @@ export type ImageBlockSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *Image → Stacked → Primary*
+ */
+export interface ImageBlockSliceStackedPrimary {
+  /**
+   * Image 1 field in *Image → Stacked → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: image_block.stacked.primary.image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * Image 2 field in *Image → Stacked → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: image_block.stacked.primary.image_2
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image_2: prismic.ImageField<never>;
+}
+
+/**
+ * Stacked variation for Image Slice
+ *
+ * - **API ID**: `stacked`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ImageBlockSliceStacked = prismic.SharedSliceVariation<
+  "stacked",
+  Simplify<ImageBlockSliceStackedPrimary>,
+  never
+>;
+
+/**
  * Slice variation for *Image*
  */
-type ImageBlockSliceVariation = ImageBlockSliceDefault;
+type ImageBlockSliceVariation = ImageBlockSliceDefault | ImageBlockSliceStacked;
 
 /**
  * Image Shared Slice
@@ -751,8 +789,10 @@ declare module "@prismicio/client" {
       HomeHeroSliceDefault,
       ImageBlockSlice,
       ImageBlockSliceDefaultPrimary,
+      ImageBlockSliceStackedPrimary,
       ImageBlockSliceVariation,
       ImageBlockSliceDefault,
+      ImageBlockSliceStacked,
       RichTextSlice,
       RichTextSliceDefaultPrimary,
       RichTextSliceVariation,
