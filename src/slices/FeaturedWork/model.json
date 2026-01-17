@@ -1,0 +1,46 @@
+{
+  "id": "featured_work",
+  "type": "SharedSlice",
+  "name": "FeaturedWork",
+  "description": "FeaturedWork",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "case_studies": {
+          "type": "Group",
+          "config": {
+            "label": "Case Studies",
+            "repeat": true,
+            "fields": {
+              "case_study": {
+                "type": "Link",
+                "config": {
+                  "label": "Case Study",
+                  "select": "document",
+                  "repeat": false,
+                  "customtypes": [
+                    {
+                      "id": "case_study",
+                      "fields": [
+                        "meta_title",
+                        "meta_description",
+                        "meta_image"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

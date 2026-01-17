@@ -1,0 +1,48 @@
+{
+  "id": "text_block",
+  "type": "SharedSlice",
+  "name": "Text",
+  "description": "TextBlock",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": ""
+          }
+        },
+        "detail": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Detail",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "strong,em,list-item,paragraph,hyperlink"
+          }
+        },
+        "margin": {
+          "type": "Select",
+          "config": {
+            "label": "Margin",
+            "placeholder": "",
+            "options": [
+              "None",
+              "Above",
+              "Below",
+              "Both"
+            ]
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

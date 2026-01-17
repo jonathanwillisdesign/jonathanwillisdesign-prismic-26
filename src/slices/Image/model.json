@@ -1,0 +1,40 @@
+{
+  "id": "image_block",
+  "type": "SharedSlice",
+  "name": "Image",
+  "description": "ImageBlock",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Full Width",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "image": {
+          "type": "Image",
+          "config": {
+            "label": "Image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "margin": {
+          "type": "Select",
+          "config": {
+            "label": "Margin",
+            "placeholder": "",
+            "options": [
+              "None",
+              "Above",
+              "Below",
+              "Both"
+            ]
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

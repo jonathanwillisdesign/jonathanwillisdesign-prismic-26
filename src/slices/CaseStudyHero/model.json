@@ -1,0 +1,16 @@
+{
+  "id": "case_study_hero",
+  "type": "SharedSlice",
+  "name": "CaseStudyHero",
+  "description": "CaseStudyHero",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": ""
+    }
+  ]
+}
