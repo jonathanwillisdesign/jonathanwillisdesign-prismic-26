@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import * as stylex from "@stylexjs/stylex";
+import { Dialog } from "@base-ui/react/dialog";
 import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
 
 const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
@@ -11,7 +12,9 @@ const headerStyles = stylex.create({
     width: "100%",
     borderBottom: `1px solid ${colors.border}`,
     backgroundColor: colors.background,
-    position: "relative",
+    position: "sticky",
+    top: 0,
+    zIndex: 100,
   },
   container: {
     maxWidth: "1200px",
@@ -49,61 +52,105 @@ const headerStyles = stylex.create({
     display: "none",
     [MOBILE_BREAKPOINT]: {
       display: "flex",
-      flexDirection: "column",
-      gap: "4px",
-      background: "none",
-      border: "none",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "40px",
+      height: "40px",
+      backgroundColor: colors.backgroundSecondary,
+      border: `1px solid ${colors.border}`,
+      borderRadius: "999px",
+      color: colors.foreground,
       cursor: "pointer",
       padding: spacing.sm,
       zIndex: 2,
-      transition: "opacity 0.2s ease",
+      transition:
+        "opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease",
       ":hover": {
         opacity: 0.7,
       },
     },
   },
-  burgerLine: {
+  burgerIcon: {
     width: "24px",
-    height: "2px",
-    backgroundColor: colors.foreground,
-    transition: "all 0.3s ease",
+    height: "24px",
+    display: "block",
+  },
+  burgerCircle: {
     transformOrigin: "center",
+    transformBox: "fill-box",
+    transform: "scale(1)",
+    opacity: 0.85,
+    transition:
+      "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
   },
-  burgerLineOpen1: {
-    transform: "rotate(45deg) translate(5px, 5px)",
+  burgerCircleOpen: {
+    transform: "scale(2.6)",
+    opacity: 1,
   },
-  burgerLineOpen2: {
-    opacity: 0,
-  },
-  burgerLineOpen3: {
-    transform: "rotate(-45deg) translate(7px, -6px)",
-  },
-  mobileMenu: {
+  dialogBackdrop: {
     display: "none",
+    position: "fixed",
+    inset: 0,
+    zIndex: 80,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    [MOBILE_BREAKPOINT]: {
+      display: "block",
+    },
+    opacity: 1,
+    transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+    "[data-starting-style]": {
+      opacity: 0,
+    },
+    "[data-ending-style]": {
+      opacity: 0,
+    },
+  },
+  dialogViewport: {
+    display: "none",
+    position: "fixed",
+    inset: 0,
+    zIndex: 90,
+    alignItems: "flex-start",
+    justifyContent: "stretch",
+    paddingTop: "72px",
     [MOBILE_BREAKPOINT]: {
       display: "flex",
-      flexDirection: "column",
-      position: "absolute",
-      top: "100%",
-      left: 0,
-      right: 0,
-      backgroundColor: colors.background,
-      borderTop: `1px solid ${colors.border}`,
-      padding: spacing.lg,
-      gap: spacing.md,
-      zIndex: 1,
-      transform: "translateY(-100%)",
+    },
+    pointerEvents: "none",
+  },
+  dialogPopup: {
+    width: "100%",
+    backgroundColor: colors.background,
+    borderBottom: `1px solid ${colors.border}`,
+    padding: spacing.lg,
+    display: "flex",
+    flexDirection: "column",
+    gap: spacing.md,
+    transition:
+      "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+    transform: "translateY(0)",
+    opacity: 1,
+    pointerEvents: "auto",
+    "[data-starting-style]": {
+      transform: "translateY(-12px)",
       opacity: 0,
-      visibility: "hidden",
-      transition: "all 0.3s ease",
+    },
+    "[data-ending-style]": {
+      transform: "translateY(-8px)",
+      opacity: 0,
     },
   },
-  mobileMenuOpen: {
-    [MOBILE_BREAKPOINT]: {
-      transform: "translateY(0)",
-      opacity: 1,
-      visibility: "visible",
-    },
+  dialogTitle: {
+    fontSize: "14px",
+    fontWeight: 600,
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
+    color: colors.foregroundMuted,
+  },
+  mobileNav: {
+    display: "flex",
+    flexDirection: "column",
+    gap: spacing.md,
   },
   mobileNavLink: {
     color: colors.foregroundSecondary,
@@ -119,14 +166,6 @@ const headerStyles = stylex.create({
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
 
   return (
     <header
@@ -163,52 +202,61 @@ export default function Header() {
             Contact
           </a>
         </nav>
-        <button
-          {...stylex.props(headerStyles.burgerButton)}
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          <span
-            {...stylex.props(
-              headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen1,
-            )}
-          />
-          <span
-            {...stylex.props(
-              headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen2,
-            )}
-          />
-          <span
-            {...stylex.props(
-              headerStyles.burgerLine,
-              isMenuOpen && headerStyles.burgerLineOpen3,
-            )}
-          />
-        </button>
+        <Dialog.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <Dialog.Trigger
+            {...stylex.props(headerStyles.burgerButton)}
+            type="button"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+              {...stylex.props(headerStyles.burgerIcon)}
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                {...stylex.props(
+                  headerStyles.burgerCircle,
+                  isMenuOpen && headerStyles.burgerCircleOpen,
+                )}
+              />
+            </svg>
+          </Dialog.Trigger>
+
+          <Dialog.Portal>
+            <Dialog.Backdrop {...stylex.props(headerStyles.dialogBackdrop)} />
+            <Dialog.Viewport {...stylex.props(headerStyles.dialogViewport)}>
+              <Dialog.Popup {...stylex.props(headerStyles.dialogPopup)}>
+                <Dialog.Title {...stylex.props(headerStyles.dialogTitle)}>
+                  Menu
+                </Dialog.Title>
+                <nav {...stylex.props(headerStyles.mobileNav)}>
+                  <a
+                    href="/about"
+                    {...stylex.props(headerStyles.mobileNavLink)}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    About
+                  </a>
+                  <a
+                    href="/contact"
+                    {...stylex.props(headerStyles.mobileNavLink)}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Contact
+                  </a>
+                </nav>
+              </Dialog.Popup>
+            </Dialog.Viewport>
+          </Dialog.Portal>
+        </Dialog.Root>
       </div>
-      <nav
-        {...stylex.props(
-          headerStyles.mobileMenu,
-          isMenuOpen && headerStyles.mobileMenuOpen,
-        )}
-      >
-        <a
-          href="/about"
-          {...stylex.props(headerStyles.mobileNavLink)}
-          onClick={closeMenu}
-        >
-          About
-        </a>
-        <a
-          href="/contact"
-          {...stylex.props(headerStyles.mobileNavLink)}
-          onClick={closeMenu}
-        >
-          Contact
-        </a>
-      </nav>
     </header>
   );
 }
