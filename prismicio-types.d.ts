@@ -28,8 +28,8 @@ type PickContentRelationshipFieldData<
       TSubRelationship["customtypes"],
       TLang
     >;
-  } & {
-    // Group
+  } & // Group
+  {
     [TGroup in Extract<
       TRelationship["fields"][number],
       | prismic.CustomTypeModelFetchGroupLevel1
@@ -41,8 +41,8 @@ type PickContentRelationshipFieldData<
           PickContentRelationshipFieldData<TGroup, TGroupData, TLang>
         >
       : never;
-  } & {
-    // Other fields
+  } & // Other fields
+  {
     [TFieldKey in Extract<
       TRelationship["fields"][number],
       string
@@ -68,6 +68,85 @@ type ContentRelationshipFieldWithData<
     >
   >;
 }[Exclude<TCustomType[number], string>["id"]];
+
+interface AwardsDocumentData {}
+
+/**
+ * Awards document from Prismic
+ *
+ * - **API ID**: `awards`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type AwardsDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<Simplify<AwardsDocumentData>, "awards", Lang>;
+
+type BlogPostDocumentDataSlicesSlice = never;
+
+/**
+ * Content for Blog Post documents
+ */
+interface BlogPostDocumentData {
+  /**
+   * Slice Zone field in *Blog Post*
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: *None*
+   * - **API ID Path**: blog_post.slices[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/slices
+   */
+  slices: prismic.SliceZone<BlogPostDocumentDataSlicesSlice>; /**
+   * Meta Title field in *Blog Post*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A title of the page used for social media and search engines
+   * - **API ID Path**: blog_post.meta_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_title: prismic.KeyTextField;
+
+  /**
+   * Meta Description field in *Blog Post*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A brief summary of the page
+   * - **API ID Path**: blog_post.meta_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_description: prismic.KeyTextField;
+
+  /**
+   * Meta Image field in *Blog Post*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: blog_post.meta_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * Blog Post document from Prismic
+ *
+ * - **API ID**: `blog_post`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type BlogPostDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<
+    Simplify<BlogPostDocumentData>,
+    "blog_post",
+    Lang
+  >;
 
 type CaseStudyDocumentDataSlicesSlice = ImageBlockSlice | TextBlockSlice;
 
@@ -384,6 +463,8 @@ export type SettingsDocument<Lang extends string = string> =
   >;
 
 export type AllDocumentTypes =
+  | AwardsDocument
+  | BlogPostDocument
   | CaseStudyDocument
   | FooterDocument
   | HeaderDocument
@@ -391,33 +472,63 @@ export type AllDocumentTypes =
   | SettingsDocument;
 
 /**
- * Default variation for CaseStudyHero Slice
+ * Item in *Carousel → Default → Primary → Images*
+ */
+export interface CarouselSliceDefaultPrimaryImagesItem {
+  /**
+   * Image field in *Carousel → Default → Primary → Images*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carousel.default.primary.images[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+}
+
+/**
+ * Primary content in *Carousel → Default → Primary*
+ */
+export interface CarouselSliceDefaultPrimary {
+  /**
+   * Images field in *Carousel → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: carousel.default.primary.images[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  images: prismic.GroupField<Simplify<CarouselSliceDefaultPrimaryImagesItem>>;
+}
+
+/**
+ * Default variation for Carousel Slice
  *
  * - **API ID**: `default`
  * - **Description**: Default
  * - **Documentation**: https://prismic.io/docs/slices
  */
-export type CaseStudyHeroSliceDefault = prismic.SharedSliceVariation<
+export type CarouselSliceDefault = prismic.SharedSliceVariation<
   "default",
-  Record<string, never>,
+  Simplify<CarouselSliceDefaultPrimary>,
   never
 >;
 
 /**
- * Slice variation for *CaseStudyHero*
+ * Slice variation for *Carousel*
  */
-type CaseStudyHeroSliceVariation = CaseStudyHeroSliceDefault;
+type CarouselSliceVariation = CarouselSliceDefault;
 
 /**
- * CaseStudyHero Shared Slice
+ * Carousel Shared Slice
  *
- * - **API ID**: `case_study_hero`
- * - **Description**: CaseStudyHero
+ * - **API ID**: `carousel`
+ * - **Description**: Carousel
  * - **Documentation**: https://prismic.io/docs/slices
  */
-export type CaseStudyHeroSlice = prismic.SharedSlice<
-  "case_study_hero",
-  CaseStudyHeroSliceVariation
+export type CarouselSlice = prismic.SharedSlice<
+  "carousel",
+  CarouselSliceVariation
 >;
 
 /**
@@ -761,6 +872,11 @@ declare module "@prismicio/client" {
 
   namespace Content {
     export type {
+      AwardsDocument,
+      AwardsDocumentData,
+      BlogPostDocument,
+      BlogPostDocumentData,
+      BlogPostDocumentDataSlicesSlice,
       CaseStudyDocument,
       CaseStudyDocumentData,
       CaseStudyDocumentDataSlicesSlice,
@@ -775,9 +891,11 @@ declare module "@prismicio/client" {
       SettingsDocument,
       SettingsDocumentData,
       AllDocumentTypes,
-      CaseStudyHeroSlice,
-      CaseStudyHeroSliceVariation,
-      CaseStudyHeroSliceDefault,
+      CarouselSlice,
+      CarouselSliceDefaultPrimaryImagesItem,
+      CarouselSliceDefaultPrimary,
+      CarouselSliceVariation,
+      CarouselSliceDefault,
       FeaturedWorkSlice,
       FeaturedWorkSliceDefaultPrimaryCaseStudiesItem,
       FeaturedWorkSliceDefaultPrimary,
