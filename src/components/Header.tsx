@@ -184,7 +184,7 @@ export default function Header({ name, links }: HeaderProps) {
         >
           {name}
         </PrismicNextLink>
-        {isFilled.repeatable(links) && (
+        {links && links.length > 0 && (
           <nav {...stylex.props(headerStyles.nav)}>
             {links.map((link, index) => {
               if (!isFilled.link(link)) {
@@ -202,7 +202,7 @@ export default function Header({ name, links }: HeaderProps) {
             })}
           </nav>
         )}
-        {isFilled.repeatable(links) && (
+        {links && links.length > 0 && (
           <Dialog.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <Dialog.Trigger
               {...stylex.props(headerStyles.burgerButton)}
