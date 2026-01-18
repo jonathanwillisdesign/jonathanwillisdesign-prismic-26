@@ -1,0 +1,35 @@
+{
+  "id": "video",
+  "type": "SharedSlice",
+  "name": "Video",
+  "description": "Video",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Embed",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "embed_link": {
+          "type": "Embed",
+          "config": {
+            "label": "Embed Link",
+            "placeholder": ""
+          }
+        },
+        "caption": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Caption",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

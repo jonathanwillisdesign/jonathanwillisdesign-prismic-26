@@ -28,7 +28,8 @@ type PickContentRelationshipFieldData<
       TSubRelationship["customtypes"],
       TLang
     >;
-  } & { // Group
+  } & // Group
+  {
     [TGroup in Extract<
       TRelationship["fields"][number],
       | prismic.CustomTypeModelFetchGroupLevel1
@@ -40,7 +41,8 @@ type PickContentRelationshipFieldData<
           PickContentRelationshipFieldData<TGroup, TGroupData, TLang>
         >
       : never;
-  } & { // Other fields
+  } & // Other fields
+  {
     [TFieldKey in Extract<
       TRelationship["fields"][number],
       string
@@ -146,7 +148,10 @@ export type BlogPostDocument<Lang extends string = string> =
     Lang
   >;
 
-type CaseStudyDocumentDataSlicesSlice = ImageBlockSlice | TextBlockSlice;
+type CaseStudyDocumentDataSlicesSlice =
+  | VideoSlice
+  | ImageBlockSlice
+  | TextBlockSlice;
 
 /**
  * Content for Case Study documents
@@ -849,6 +854,58 @@ export type TextBlockSlice = prismic.SharedSlice<
   TextBlockSliceVariation
 >;
 
+/**
+ * Primary content in *Video → Embed → Primary*
+ */
+export interface VideoSliceDefaultPrimary {
+  /**
+   * Embed Link field in *Video → Embed → Primary*
+   *
+   * - **Field Type**: Embed
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video.default.primary.embed_link
+   * - **Documentation**: https://prismic.io/docs/fields/embed
+   */
+  embed_link: prismic.EmbedField;
+
+  /**
+   * Caption field in *Video → Embed → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video.default.primary.caption
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  caption: prismic.RichTextField;
+}
+
+/**
+ * Embed variation for Video Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type VideoSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<VideoSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Video*
+ */
+type VideoSliceVariation = VideoSliceDefault;
+
+/**
+ * Video Shared Slice
+ *
+ * - **API ID**: `video`
+ * - **Description**: Video
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type VideoSlice = prismic.SharedSlice<"video", VideoSliceVariation>;
+
 declare module "@prismicio/client" {
   interface CreateClient {
     (
@@ -917,6 +974,10 @@ declare module "@prismicio/client" {
       TextBlockSliceDefaultPrimary,
       TextBlockSliceVariation,
       TextBlockSliceDefault,
+      VideoSlice,
+      VideoSliceDefaultPrimary,
+      VideoSliceVariation,
+      VideoSliceDefault,
     };
   }
 }

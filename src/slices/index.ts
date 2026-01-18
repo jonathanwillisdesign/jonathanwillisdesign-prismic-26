@@ -9,4 +9,5 @@ export const components = {
   image_block: dynamic(() => import("./Image")),
   rich_text: dynamic(() => import("./RichText")),
   text_block: dynamic(() => import("./Text")),
+  video: dynamic(() => import("./Video")),
 };
