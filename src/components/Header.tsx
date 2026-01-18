@@ -5,6 +5,7 @@ import * as stylex from "@stylexjs/stylex";
 import { Dialog } from "@base-ui/react/dialog";
 import { List, X } from "@phosphor-icons/react";
 import { PrismicNextLink } from "@prismicio/next";
+import { isFilled, type LinkField } from "@prismicio/client";
 import { colors, spacing } from "@/styles/theme.stylex";
 
 const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
@@ -62,7 +63,7 @@ const headerStyles = stylex.create({
       width: "40px",
       height: "40px",
       border: "none",
-      borderRadius: "999px",
+      borderRadius: "0px",
       backgroundColor: "transparent",
       color: colors.foreground,
       cursor: "pointer",
@@ -165,7 +166,12 @@ const headerStyles = stylex.create({
   },
 });
 
-export default function Header() {
+type HeaderProps = {
+  name: string;
+  links: LinkField[];
+};
+
+export default function Header({ name, links }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -173,63 +179,69 @@ export default function Header() {
       <div {...stylex.props(headerStyles.container)}>
         <PrismicNextLink
           href="/"
-          {...stylex.props(
-            headerStyles.logo,
-          )}
+          {...stylex.props(headerStyles.logo)}
           onClick={() => setIsMenuOpen(false)}
         >
-          Jonathan Willis
+          {name}
         </PrismicNextLink>
-        <nav
-          {...stylex.props(headerStyles.nav)}
-        >
-          <PrismicNextLink href="/about" {...stylex.props(headerStyles.navLink)}>
-            About
-          </PrismicNextLink>
-          <PrismicNextLink
-            href="/contact"
-            {...stylex.props(headerStyles.navLink)}
-          >
-            Contact
-          </PrismicNextLink>
-        </nav>
-        <Dialog.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-          <Dialog.Trigger
-            {...stylex.props(headerStyles.burgerButton)}
-            type="button"
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          >
-            {isMenuOpen ? (
-              <X aria-hidden="true" {...stylex.props(headerStyles.icon)} />
-            ) : (
-              <List aria-hidden="true" {...stylex.props(headerStyles.icon)} />
-            )}
-          </Dialog.Trigger>
+        {isFilled.repeatable(links) && (
+          <nav {...stylex.props(headerStyles.nav)}>
+            {links.map((link, index) => {
+              if (!isFilled.link(link)) {
+                return null;
+              }
+              return (
+                <PrismicNextLink
+                  key={`${link.text ?? link.url ?? "link"}-${index}`}
+                  field={link}
+                  {...stylex.props(headerStyles.navLink)}
+                >
+                  {link.text ?? ""}
+                </PrismicNextLink>
+              );
+            })}
+          </nav>
+        )}
+        {isFilled.repeatable(links) && (
+          <Dialog.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <Dialog.Trigger
+              {...stylex.props(headerStyles.burgerButton)}
+              type="button"
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            >
+              {isMenuOpen ? (
+                <X aria-hidden="true" {...stylex.props(headerStyles.icon)} />
+              ) : (
+                <List aria-hidden="true" {...stylex.props(headerStyles.icon)} />
+              )}
+            </Dialog.Trigger>
 
-          <Dialog.Portal>
-            <Dialog.Backdrop {...stylex.props(headerStyles.dialogBackdrop)} />
-            <Dialog.Viewport {...stylex.props(headerStyles.dialogViewport)}>
-              <Dialog.Popup {...stylex.props(headerStyles.dialogPopup)}>
-                <nav {...stylex.props(headerStyles.mobileNav)}>
-                  <PrismicNextLink
-                    href="/about"
-                    {...stylex.props(headerStyles.mobileNavLink)}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    About
-                  </PrismicNextLink>
-                  <PrismicNextLink
-                    href="/contact"
-                    {...stylex.props(headerStyles.mobileNavLink)}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Contact
-                  </PrismicNextLink>
-                </nav>
-              </Dialog.Popup>
-            </Dialog.Viewport>
-          </Dialog.Portal>
-        </Dialog.Root>
+            <Dialog.Portal>
+              <Dialog.Backdrop {...stylex.props(headerStyles.dialogBackdrop)} />
+              <Dialog.Viewport {...stylex.props(headerStyles.dialogViewport)}>
+                <Dialog.Popup {...stylex.props(headerStyles.dialogPopup)}>
+                  <nav {...stylex.props(headerStyles.mobileNav)}>
+                    {links.map((link, index) => {
+                      if (!isFilled.link(link)) {
+                        return null;
+                      }
+                      return (
+                        <PrismicNextLink
+                          key={`${link.text ?? link.url ?? "link"}-${index}`}
+                          field={link}
+                          {...stylex.props(headerStyles.mobileNavLink)}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {link.text ?? ""}
+                        </PrismicNextLink>
+                      );
+                    })}
+                  </nav>
+                </Dialog.Popup>
+              </Dialog.Viewport>
+            </Dialog.Portal>
+          </Dialog.Root>
+        )}
       </div>
     </header>
   );

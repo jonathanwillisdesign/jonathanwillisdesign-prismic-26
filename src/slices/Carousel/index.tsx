@@ -102,7 +102,10 @@ const Carousel: FC<CarouselProps> = ({ slice }) => {
           }}
         >
           {duplicatedImages.map((image, index) => (
-            <div key={`${image.url || ""}-${index}`} {...stylex.props(styles.imageItem)}>
+            <div
+              key={`${image.url || ""}-${index}`}
+              {...stylex.props(styles.imageItem)}
+            >
               <div {...stylex.props(styles.imageWrapper)}>
                 <PrismicImage
                   field={image}

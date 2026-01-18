@@ -69,7 +69,9 @@ export function AnimationWrapper({
       ref={scrollTrigger ? ref : undefined}
       {...stylexProps}
       className={
-        className ? `${stylexProps.className ?? ""} ${className}` : stylexProps.className
+        className
+          ? `${stylexProps.className ?? ""} ${className}`
+          : stylexProps.className
       }
     >
       {children}

@@ -2,7 +2,12 @@
 
 import { PrismicNextImage } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
-import { type ComponentProps, type CSSProperties, useMemo, useState } from "react";
+import {
+  type ComponentProps,
+  type CSSProperties,
+  useMemo,
+  useState,
+} from "react";
 
 // Keep this a fixed dark gray so images always have a stable backing
 // (even in light theme) while loading.
@@ -90,7 +95,10 @@ export function PrismicImage({
     return undefined;
   }, [aspectRatio, props]);
 
-  const stylexImageProps = stylex.props(styles.image, isLoaded && styles.imageLoaded);
+  const stylexImageProps = stylex.props(
+    styles.image,
+    isLoaded && styles.imageLoaded,
+  );
   const originalClassName = (props as any).className as string | undefined;
   const originalStyle = (props as any).style as CSSProperties | undefined;
 
@@ -126,4 +134,3 @@ export function PrismicImage({
     </div>
   );
 }
-

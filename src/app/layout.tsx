@@ -1,5 +1,5 @@
 import { PrismicPreview } from "@prismicio/next";
-import { repositoryName } from "@/prismicio";
+import { repositoryName, createClient } from "@/prismicio";
 import * as stylex from "@stylexjs/stylex";
 import { darkTheme, colors } from "@/styles/theme.stylex";
 import "@fontsource-variable/geist";
@@ -20,15 +20,18 @@ const bodyStyles = stylex.create({
   },
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const client = createClient();
+  const header = await client.getSingle("header");
+
   return (
     <html lang="en" {...stylex.props(darkTheme)}>
       <body {...stylex.props(bodyStyles.body)}>
-        <Header />
+        <Header name={header.data.name || ""} links={header.data.links} />
         <main {...stylex.props(bodyStyles.main)}>{children}</main>
         <Footer />
         <PrismicPreview repositoryName={repositoryName} />
