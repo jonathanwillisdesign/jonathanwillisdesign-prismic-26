@@ -93,7 +93,7 @@ const styles = stylex.create({
   },
   title: {
     fontSize: typography.subheadingSize,
-    fontWeight: 500,
+    fontWeight: 700,
     margin: 0,
     color: colors.foreground,
     lineHeight: 1.3,
