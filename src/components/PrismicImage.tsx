@@ -49,9 +49,9 @@ const styles = stylex.create({
   },
   image: {
     opacity: 0,
-    transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
-    "@media (prefers-reduced-motion: reduce)": {
-      transition: "none",
+    transition: {
+      default: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+      "@media (prefers-reduced-motion: reduce)": "none",
     },
   },
   imageLoaded: {
@@ -62,9 +62,9 @@ const styles = stylex.create({
     inset: 0,
     backgroundColor: IMAGE_PLACEHOLDER_COLOR,
     opacity: 1,
-    transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
-    "@media (prefers-reduced-motion: reduce)": {
-      transition: "none",
+    transition: {
+      default: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+      "@media (prefers-reduced-motion: reduce)": "none",
     },
   },
   placeholderHidden: {
@@ -77,15 +77,19 @@ export function PrismicImage({
   aspectRatio,
   wrapperStyle,
   imageStyle,
-  onLoadingComplete,
+  onLoad,
   ...props
 }: PrismicImageProps) {
+  const fieldAny = (props as any).field;
+  const propAlt = (props as any).alt;
+  const fieldAlt = fieldAny?.alt;
+
+
   const [isLoaded, setIsLoaded] = useState(false);
 
   const computedAspectRatio = useMemo(() => {
     if (aspectRatio) return aspectRatio;
 
-    const fieldAny = (props as any).field;
     const w = fieldAny?.dimensions?.width;
     const h = fieldAny?.dimensions?.height;
     if (typeof w === "number" && typeof h === "number" && w > 0 && h > 0) {
@@ -101,6 +105,16 @@ export function PrismicImage({
   );
   const originalClassName = (props as any).className as string | undefined;
   const originalStyle = (props as any).style as CSSProperties | undefined;
+  const nextImageProps = {
+    ...(props as PrismicNextImageBaseProps),
+  } as PrismicNextImageBaseProps;
+  const nextAlt = (nextImageProps as any).alt;
+  const shouldStripAlt = typeof nextAlt === "string" && nextAlt.length > 0;
+
+  if (shouldStripAlt) {
+    (nextImageProps as { alt?: string }).alt = "";
+  }
+
 
   return (
     <div
@@ -118,11 +132,11 @@ export function PrismicImage({
         )}
       />
       <PrismicNextImage
-        {...(props as PrismicNextImageBaseProps)}
+        {...nextImageProps}
         fill
-        onLoadingComplete={(img) => {
+        onLoad={(e) => {
           setIsLoaded(true);
-          onLoadingComplete?.(img as any);
+          onLoad?.(e);
         }}
         className={
           originalClassName
