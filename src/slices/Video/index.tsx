@@ -11,7 +11,6 @@ import {
 import * as stylex from "@stylexjs/stylex";
 
 import { Wrapper } from "@/components/utils/Wrapper";
-import { linkStyles } from "@/components/utils/Link";
 import { Text } from "@/components/utils/Text";
 import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -72,10 +71,19 @@ const Video: FC<VideoProps> = ({ slice }) => {
     margin: "-50px",
   });
 
-  const embedFilled = isFilled.embed(slice.primary.embed_link);
-  const embedHtml = slice.primary.embed_link?.html || "";
-  const fileFilled = isFilled.link(slice.primary.video_file);
-  const videoUrl = fileFilled ? slice.primary.video_file.url : "";
+  const isEmbedVariation = slice.variation === "default";
+  const embedFilled =
+    isEmbedVariation && isFilled.embed(slice.primary.embed_link);
+  const embedHtml =
+    isEmbedVariation && embedFilled ? slice.primary.embed_link?.html || "" : "";
+
+  const isFileVariation = slice.variation === "file";
+  let videoUrl: string | undefined;
+  if (isFileVariation && isFilled.linkToMedia(slice.primary.video_file)) {
+    videoUrl = slice.primary.video_file.url;
+  }
+  const fileFilled = Boolean(videoUrl);
+  const shouldAutoplay = isFileVariation && slice.primary.autoplay === true;
 
   return (
     <div {...stylex.props(styles.root)}>
@@ -104,6 +112,8 @@ const Video: FC<VideoProps> = ({ slice }) => {
                 <video
                   {...stylex.props(styles.video)}
                   src={videoUrl || undefined}
+                  autoPlay={shouldAutoplay}
+                  muted={shouldAutoplay}
                   controls
                   playsInline
                 />
