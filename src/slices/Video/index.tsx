@@ -13,11 +13,7 @@ import * as stylex from "@stylexjs/stylex";
 import { Wrapper } from "@/components/utils/Wrapper";
 import { linkStyles } from "@/components/utils/Link";
 import { Text } from "@/components/utils/Text";
-import {
-  colors,
-  spacing,
-  animationStyles,
-} from "@/styles/theme.stylex";
+import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /**
@@ -29,6 +25,11 @@ const styles = stylex.create({
   root: {
     marginTop: spacing.XXXXL,
     marginBottom: spacing.XXXXL,
+  },
+  video: {
+    width: "100%",
+    height: "auto",
+    display: "block",
   },
   caption: {
     display: "grid",
@@ -73,6 +74,8 @@ const Video: FC<VideoProps> = ({ slice }) => {
 
   const embedFilled = isFilled.embed(slice.primary.embed_link);
   const embedHtml = slice.primary.embed_link?.html || "";
+  const fileFilled = isFilled.link(slice.primary.video_file);
+  const videoUrl = fileFilled ? slice.primary.video_file.url : "";
 
   return (
     <div {...stylex.props(styles.root)}>
@@ -95,6 +98,14 @@ const Video: FC<VideoProps> = ({ slice }) => {
                   dangerouslySetInnerHTML={{
                     __html: embedHtml,
                   }}
+                />
+              )}
+              {fileFilled && (
+                <video
+                  {...stylex.props(styles.video)}
+                  src={videoUrl || undefined}
+                  controls
+                  playsInline
                 />
               )}
               {isFilled.richText(slice.primary.caption) && (

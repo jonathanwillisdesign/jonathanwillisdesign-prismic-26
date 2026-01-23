@@ -893,9 +893,47 @@ export type VideoSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *Video → File → Primary*
+ */
+export interface VideoSliceFilePrimary {
+  /**
+   * Video File field in *Video → File → Primary*
+   *
+   * - **Field Type**: Link to Media
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video.file.primary.video_file
+   * - **Documentation**: https://prismic.io/docs/fields/link-to-media
+   */
+  video_file: prismic.LinkToMediaField<prismic.FieldState, never>;
+
+  /**
+   * Caption field in *Video → File → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video.file.primary.caption
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  caption: prismic.RichTextField;
+}
+
+/**
+ * File variation for Video Slice
+ *
+ * - **API ID**: `file`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type VideoSliceFile = prismic.SharedSliceVariation<
+  "file",
+  Simplify<VideoSliceFilePrimary>,
+  never
+>;
+
+/**
  * Slice variation for *Video*
  */
-type VideoSliceVariation = VideoSliceDefault;
+type VideoSliceVariation = VideoSliceDefault | VideoSliceFile;
 
 /**
  * Video Shared Slice
@@ -976,8 +1014,10 @@ declare module "@prismicio/client" {
       TextBlockSliceDefault,
       VideoSlice,
       VideoSliceDefaultPrimary,
+      VideoSliceFilePrimary,
       VideoSliceVariation,
       VideoSliceDefault,
+      VideoSliceFile,
     };
   }
 }

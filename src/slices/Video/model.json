@@ -30,6 +30,35 @@
         }
       },
       "items": {}
+    },
+    {
+      "id": "file",
+      "name": "File",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "video_file": {
+          "type": "Link",
+          "config": {
+            "label": "Video File",
+            "placeholder": "",
+            "select": "media",
+            "allowText": true
+          }
+        },
+        "caption": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Caption",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        }
+      },
+      "items": {}
     }
   ]
 }
