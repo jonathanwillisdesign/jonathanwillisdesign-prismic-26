@@ -7,7 +7,7 @@ import { motion } from "motion/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { PrismicImage } from "@/components/PrismicImage";
-import { spacing } from "@/styles/theme.stylex";
+import { spacing, dimensions, breakpoints } from "@/styles/theme.stylex";
 
 /**
  * Props for `Carousel`.
@@ -20,8 +20,8 @@ export type CarouselProps = SliceComponentProps<Content.CarouselSlice>;
 const styles = stylex.create({
   root: {
     width: "100%",
-    marginTop: spacing["4xl"],
-    marginBottom: spacing["4xl"],
+    marginTop: spacing.XXXXL,
+    marginBottom: spacing.XXXXL,
     overflow: "hidden",
   },
   carousel: {
@@ -30,13 +30,13 @@ const styles = stylex.create({
   },
   imageItem: {
     flexShrink: 0,
-    width: "300px",
+    width: {
+      default: dimensions.imageMedium,
+      [breakpoints.mobile]: dimensions.imageSmall,
+    },
     aspectRatio: "1 / 1",
     marginRight: spacing.md,
     overflow: "hidden",
-    "@media (max-width: 768px)": {
-      width: "250px",
-    },
   },
   imageWrapper: {
     position: "relative",
@@ -77,9 +77,9 @@ const Carousel: FC<CarouselProps> = ({ slice }) => {
     .flatMap(() => images);
 
   // Calculate the width of one set of images
-  // Each image is 300px + 16px margin (spacing.md) on desktop
-  // On mobile, 250px + 16px margin
-  const imageWidthDesktop = 300 + 16; // width + margin
+  // Each image is 18.75rem (300px) + 1rem margin (spacing.md) on desktop
+  // Convert rem to px for motion calculation (assuming 16px = 1rem)
+  const imageWidthDesktop = 18.75 * 16 + 16; // dimensions.imageMedium + spacing.md in px
 
   // Calculate translate distance: move by one full set of images
   const translateDistance = images.length * imageWidthDesktop;

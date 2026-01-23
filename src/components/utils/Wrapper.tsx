@@ -2,11 +2,10 @@ import { type ReactNode } from "react";
 import type React from "react";
 import * as stylex from "@stylexjs/stylex";
 
-import { colors, spacing } from "@/styles/theme.stylex";
+import { colors, spacing, container, breakpoints } from "@/styles/theme.stylex";
 
 type RootProps = {
   children?: ReactNode;
-  fullWidth?: boolean;
 } & React.HTMLAttributes<HTMLElement>;
 
 type ContainerProps = {
@@ -27,8 +26,11 @@ const styles = stylex.create({
   },
   container: {
     width: "100%",
-    maxWidth: 1200,
-    paddingInline: spacing.lg,
+    maxWidth: container.maxWidth,
+    paddingInline: {
+      default: spacing.lg,
+      [breakpoints.mobile]: spacing.md,
+    },
     marginInline: "auto",
   },
   containerFullWidth: {
@@ -46,7 +48,7 @@ const styles = stylex.create({
   },
 });
 
-function Root({ children, fullWidth: _fullWidth, ...props }: RootProps) {
+function Root({ children, ...props }: RootProps) {
   return (
     <section {...props} {...stylex.props(styles.root)}>
       {children}

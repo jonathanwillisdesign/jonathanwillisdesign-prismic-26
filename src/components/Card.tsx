@@ -2,7 +2,14 @@ import { type ReactNode } from "react";
 import type React from "react";
 import * as stylex from "@stylexjs/stylex";
 
-import { colors, spacing, borderRadius } from "@/styles/theme.stylex";
+import {
+  colors,
+  spacing,
+  borderRadius,
+  typography,
+  dimensions,
+  breakpoints,
+} from "@/styles/theme.stylex";
 
 type RootProps = {
   children: ReactNode;
@@ -18,23 +25,31 @@ type TitleProps = {
 
 const styles = stylex.create({
   root: {
-    display: "block",
+    display: "flex",
+    flexDirection: "column",
     padding: 0,
     borderRadius: borderRadius.none,
     border: "none",
     backgroundColor: "transparent",
     overflow: "hidden",
-    filter: "grayscale(100%)",
-    transition: "filter 0.3s ease",
+    gap: spacing.md,
   },
   media: {
     display: "block",
     position: "relative",
     width: "100%",
-    aspectRatio: "16 / 9",
-    minHeight: 200,
+    height: dimensions.cardHeight,
     borderRadius: borderRadius.none,
     overflow: "hidden",
+  },
+  mediaContent: {
+    position: "absolute",
+    inset: 0,
+    transition: "transform 0.5s ease",
+    transform: {
+      default: "scale(1)",
+      [stylex.when.ancestor(":hover")]: "scale(1.05)",
+    },
   },
   mediaWrapper: {
     position: "absolute",
@@ -51,22 +66,28 @@ const styles = stylex.create({
     display: "block",
   },
   body: {
-    display: "grid",
+    display: "flex",
+    flexDirection: "column",
     gap: spacing.sm,
   },
   title: {
-    fontSize: 22,
-    fontWeight: 600,
+    fontSize: {
+      default: typography.fontSizeLG,
+      [breakpoints.mobile]: typography.fontSizeLG,
+    },
+    fontWeight: 700,
     margin: 0,
     color: colors.foreground,
+    lineHeight: typography.lineHeightNormal,
+    letterSpacing: "-0.01em",
   },
   meta: {
-    fontSize: 14,
+    fontSize: typography.fontSizeM,
     color: colors.foregroundMuted,
   },
   description: {
-    fontSize: 16,
-    lineHeight: 1.6,
+    fontSize: typography.fontSizeM,
+    lineHeight: typography.lineHeightNormal,
     color: colors.foregroundSecondary,
     margin: 0,
   },
@@ -74,7 +95,7 @@ const styles = stylex.create({
 
 function Root({ children, ...props }: RootProps) {
   return (
-    <div {...props} {...stylex.props(styles.root)}>
+    <div {...props} {...stylex.props(stylex.defaultMarker(), styles.root)}>
       {children}
     </div>
   );
@@ -83,6 +104,14 @@ function Root({ children, ...props }: RootProps) {
 function Media({ children, ...props }: SectionProps) {
   return (
     <div {...props} {...stylex.props(styles.media)}>
+      {children}
+    </div>
+  );
+}
+
+function MediaContent({ children, ...props }: SectionProps) {
+  return (
+    <div {...props} {...stylex.props(styles.mediaContent)}>
       {children}
     </div>
   );
@@ -123,6 +152,7 @@ function Description({ children, ...props }: SectionProps) {
 export const Card = {
   Root,
   Media,
+  MediaContent,
   Body,
   Title,
   Meta,

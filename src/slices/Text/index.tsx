@@ -11,9 +11,9 @@ import { PrismicNextLink } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
 
 import { PrismicImage } from "@/components/PrismicImage";
-import { Wrapper } from "@/components/slices/Wrapper";
-import { linkStyles } from "@/components/slices/Link";
-import { Text } from "@/components/slices/Text";
+import { Wrapper } from "@/components/utils/Wrapper";
+import { linkStyles } from "@/components/utils/Link";
+import { Text } from "@/components/utils/Text";
 import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
@@ -27,8 +27,8 @@ export type TextBlockProps = SliceComponentProps<Content.TextBlockSlice>;
  */
 const styles = stylex.create({
   root: {
-    marginTop: spacing["4xl"],
-    marginBottom: spacing["4xl"],
+    marginTop: spacing.XXXXL,
+    marginBottom: spacing.XXXXL,
   },
   richText: {
     display: "grid",

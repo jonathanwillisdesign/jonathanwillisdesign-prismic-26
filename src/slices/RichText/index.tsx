@@ -11,21 +11,21 @@ import {
 import * as stylex from "@stylexjs/stylex";
 
 import { PrismicImage } from "@/components/PrismicImage";
-import { Wrapper } from "@/components/slices/Wrapper";
-import { linkStyles } from "@/components/slices/Link";
-import { Text } from "@/components/slices/Text";
+import { Wrapper } from "@/components/utils/Wrapper";
+import { linkStyles } from "@/components/utils/Link";
+import { Text } from "@/components/utils/Text";
 import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const styles = stylex.create({
   richtext: {
     display: "grid",
-    rowGap: 20,
+    rowGap: spacing.xl,
     color: colors.foregroundSecondary,
   },
   root: {
-    marginTop: spacing["4xl"],
-    marginBottom: spacing["4xl"],
+    marginTop: spacing.XXXXL,
+    marginBottom: spacing.XXXXL,
   },
   list: {
     paddingInlineStart: "1.1em",

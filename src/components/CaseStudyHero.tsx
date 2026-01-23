@@ -7,10 +7,15 @@ import { PrismicRichText, type JSXMapSerializer } from "@prismicio/react";
 
 import { AnimationWrapper } from "@/components/AnimationWrapper";
 import { PrismicImage } from "@/components/PrismicImage";
-import { Wrapper } from "@/components/slices/Wrapper";
-import { linkStyles } from "@/components/slices/Link";
-import { Text } from "@/components/slices/Text";
-import { spacing } from "@/styles/theme.stylex";
+import { Wrapper } from "@/components/utils/Wrapper";
+import { linkStyles } from "@/components/utils/Link";
+import { Text } from "@/components/utils/Text";
+import {
+  spacing,
+  typography,
+  colors,
+  container,
+} from "@/styles/theme.stylex";
 
 type CaseStudyHeroProps = {
   title: string | null | undefined;
@@ -26,14 +31,14 @@ const styles = stylex.create({
     marginBottom: 0,
   },
   header: {
-    maxWidth: 1200,
+    maxWidth: container.maxWidth,
     paddingInline: spacing.lg,
     marginInline: "auto",
     width: "100%",
     display: "grid",
     gap: spacing.md,
-    marginTop: spacing["4xl"],
-    marginBottom: spacing["4xl"],
+    marginTop: spacing.XXXXL,
+    marginBottom: spacing.XXXXL,
   },
   description: {
     display: "grid",
@@ -50,21 +55,22 @@ const styles = stylex.create({
   },
 });
 
+const descriptionTextStyles = stylex.create({
+  paragraph: {
+    fontFamily:
+      "'Geist Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    fontSize: typography.fontSizeXXXL,
+    lineHeight: typography.lineHeightTight,
+    color: colors.foreground,
+    margin: 0,
+  },
+});
+
 export function CaseStudyHero({
   title,
   description,
   heroImage,
 }: CaseStudyHeroProps) {
-  const descriptionTextStyles = stylex.create({
-    paragraph: {
-      fontFamily:
-        "'Geist Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-      fontSize: 28,
-      lineHeight: 1.2,
-      color: "rgba(250, 250, 250, 1)",
-      margin: 0,
-    },
-  });
 
   const richTextComponents: JSXMapSerializer = {
     paragraph: ({ children }) => (

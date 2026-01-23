@@ -10,9 +10,9 @@ import {
 } from "@prismicio/react";
 import * as stylex from "@stylexjs/stylex";
 
-import { Wrapper } from "@/components/slices/Wrapper";
-import { linkStyles } from "@/components/slices/Link";
-import { Text } from "@/components/slices/Text";
+import { Wrapper } from "@/components/utils/Wrapper";
+import { linkStyles } from "@/components/utils/Link";
+import { Text } from "@/components/utils/Text";
 import {
   colors,
   spacing,
@@ -27,8 +27,8 @@ export type VideoProps = SliceComponentProps<Content.VideoSlice>;
 
 const styles = stylex.create({
   root: {
-    marginTop: spacing["4xl"],
-    marginBottom: spacing["4xl"],
+    marginTop: spacing.XXXXL,
+    marginBottom: spacing.XXXXL,
   },
   caption: {
     display: "grid",
@@ -37,12 +37,13 @@ const styles = stylex.create({
     color: colors.foregroundSecondary,
   },
   captionLink: {
-    color: "#ffffff",
+    color: colors.foreground,
     textDecoration: "underline",
-    transition: "opacity 0.2s ease",
-    ":hover": {
-      opacity: 0.8,
+    opacity: {
+      default: 1,
+      ":hover": 0.8,
     },
+    transition: "opacity 0.2s ease",
   },
 });
 

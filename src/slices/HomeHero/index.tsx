@@ -7,9 +7,16 @@ import { PrismicNextLink } from "@prismicio/next";
 import * as stylex from "@stylexjs/stylex";
 
 import { PrismicImage } from "@/components/PrismicImage";
-import { Wrapper } from "@/components/slices/Wrapper";
-import { Text } from "@/components/slices/Text";
-import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
+import { Wrapper } from "@/components/utils/Wrapper";
+import { Text } from "@/components/utils/Text";
+import {
+  colors,
+  spacing,
+  animationStyles,
+  typography,
+  dimensions,
+  borderRadius,
+} from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /**
@@ -22,8 +29,8 @@ export type HomeHeroProps = SliceComponentProps<Content.HomeHeroSlice>;
  */
 const styles = stylex.create({
   root: {
-    marginTop: spacing["4xl"],
-    marginBottom: spacing["4xl"],
+    marginTop: spacing.XXXXL,
+    marginBottom: spacing.XXXXL,
   },
   hero: {
     display: "grid",
@@ -34,9 +41,9 @@ const styles = stylex.create({
     gap: spacing.md,
   },
   media: {
-    width: 160,
-    height: 160,
-    borderRadius: 999,
+    width: dimensions.avatar,
+    height: dimensions.avatar,
+    borderRadius: borderRadius.full,
     overflow: "hidden",
     position: "relative",
     aspectRatio: "1 / 1",
@@ -50,32 +57,44 @@ const styles = stylex.create({
     display: "inline-flex",
     alignItems: "center",
     gap: spacing.sm,
-    paddingBlock: 10,
+    paddingBlock: "0.625rem", // BASE_UNIT * 2.5 = 10px
     paddingInline: spacing.md,
-    borderRadius: 999,
+    borderRadius: borderRadius.full,
     border: `1px solid ${colors.border}`,
     textDecoration: "none",
-    fontSize: 14,
+    fontSize: typography.fontSizeSM,
     fontWeight: 600,
     color: colors.foreground,
     transition: "all 0.2s ease",
     cursor: "pointer",
   },
   linkPrimary: {
-    backgroundColor: colors.foreground,
+    backgroundColor: {
+      default: colors.foreground,
+      ":hover": colors.foregroundSecondary,
+    },
     color: colors.background,
-    ":hover": {
-      backgroundColor: colors.foregroundSecondary,
-      borderColor: colors.foregroundSecondary,
-      transform: "translateY(-1px)",
+    borderColor: {
+      default: colors.border,
+      ":hover": colors.foregroundSecondary,
+    },
+    transform: {
+      default: "none",
+      ":hover": "translateY(-1px)",
     },
   },
   linkSecondary: {
-    backgroundColor: colors.backgroundSecondary,
-    ":hover": {
-      backgroundColor: colors.border,
-      borderColor: colors.foregroundSecondary,
-      transform: "translateY(-1px)",
+    backgroundColor: {
+      default: colors.backgroundSecondary,
+      ":hover": colors.border,
+    },
+    borderColor: {
+      default: colors.border,
+      ":hover": colors.foregroundSecondary,
+    },
+    transform: {
+      default: "none",
+      ":hover": "translateY(-1px)",
     },
   },
 });
@@ -108,7 +127,7 @@ const HomeHero: FC<HomeHeroProps> = ({ slice }) => {
                   <PrismicImage
                     field={slice.primary.headshot}
                     alt={(slice.primary.headshot.alt || "") as ""}
-                    sizes="160px"
+                    sizes={dimensions.avatar}
                     fillParent
                     imageStyle={{
                       objectFit: "cover",

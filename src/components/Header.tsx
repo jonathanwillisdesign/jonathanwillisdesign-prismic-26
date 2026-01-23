@@ -6,9 +6,15 @@ import { Dialog } from "@base-ui/react/dialog";
 import { List, X } from "@phosphor-icons/react";
 import { PrismicNextLink } from "@prismicio/next";
 import { isFilled, type LinkField } from "@prismicio/client";
-import { colors, spacing } from "@/styles/theme.stylex";
-
-const MOBILE_BREAKPOINT = "@media (max-width: 768px)";
+import {
+  colors,
+  spacing,
+  typography,
+  zIndex,
+  container,
+  borderRadius,
+  breakpoints,
+} from "@/styles/theme.stylex";
 
 const headerStyles = stylex.create({
   header: {
@@ -17,13 +23,13 @@ const headerStyles = stylex.create({
     backgroundColor: colors.background,
     position: "sticky",
     top: 0,
-    zIndex: 100,
+    zIndex: zIndex["100"],
     // Keep sticky header on its own layer to avoid repaint flicker on navigation/scroll.
     transform: "translateZ(0)",
     backfaceVisibility: "hidden",
   },
   container: {
-    maxWidth: "1200px",
+    maxWidth: container.maxWidth,
     margin: "0 auto",
     padding: `${spacing.md} ${spacing.lg}`,
     display: "flex",
@@ -31,78 +37,94 @@ const headerStyles = stylex.create({
     justifyContent: "space-between",
   },
   logo: {
-    fontSize: "20px",
+    fontSize: {
+      default: typography.fontSizeXL,
+      [breakpoints.mobile]: typography.fontSizeM,
+    },
     fontWeight: 600,
     color: colors.foreground,
     textDecoration: "none",
-    zIndex: 2,
+    zIndex: zIndex["2"],
   },
   nav: {
-    display: "flex",
+    display: {
+      default: "flex",
+      [breakpoints.mobile]: "none",
+    },
     gap: spacing.lg,
     alignItems: "center",
-    [MOBILE_BREAKPOINT]: {
-      display: "none",
-    },
   },
   navLink: {
-    color: colors.foregroundSecondary,
-    textDecoration: "none",
-    fontSize: "14px",
-    transition: "color 0.2s ease",
-    ":hover": {
-      color: colors.foreground,
+    color: {
+      default: colors.foregroundSecondary,
+      ":hover": colors.foreground,
     },
+    textDecoration: "none",
+    fontSize: {
+      default: typography.fontSizeSM,
+      [breakpoints.mobile]: typography.fontSizeXS,
+    },
+    transition: "color 0.2s ease",
   },
   burgerButton: {
-    display: "none",
-    [MOBILE_BREAKPOINT]: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "40px",
-      height: "40px",
-      border: "none",
-      borderRadius: "0px",
-      backgroundColor: "transparent",
-      color: colors.foreground,
-      cursor: "pointer",
-      padding: spacing.sm,
-      zIndex: 2,
-      overflow: "visible",
-      transition: "opacity 0.2s ease",
-      outline: "none",
-      boxShadow: "none",
-      WebkitTapHighlightColor: "transparent",
-      appearance: "none",
-      WebkitAppearance: "none",
-      MozAppearance: "none",
-      ":hover": {
-        opacity: 0.7,
-      },
-      ":focus": {
-        outline: "none",
-      },
-      ":focus-visible": {
-        outline: "none",
-        boxShadow: "none",
-      },
+    display: {
+      default: "none",
+      [breakpoints.mobile]: "flex",
     },
+    alignItems: "center",
+    justifyContent: "center",
+    width: {
+      default: "2.5rem",
+      [breakpoints.mobile]: "2.5rem",
+    },
+    height: {
+      default: "2.5rem",
+      [breakpoints.mobile]: "2.5rem",
+    },
+    borderStyle: "solid",
+    borderWidth: 0,
+    borderColor: "transparent",
+    borderRadius: borderRadius.none,
+    backgroundColor: "transparent",
+    color: colors.foreground,
+    cursor: "pointer",
+    padding: spacing.sm,
+    zIndex: zIndex["2"],
+    overflow: "visible",
+    opacity: {
+      default: 1,
+      ":hover": 0.7,
+    },
+    transition: "opacity 0.2s ease",
+    outline: {
+      default: "none",
+      ":focus": "none",
+      ":focus-visible": "none",
+    },
+    boxShadow: {
+      default: "none",
+      ":focus": "none",
+      ":focus-visible": "none",
+    },
+    WebkitTapHighlightColor: "transparent",
+    appearance: "none",
+    WebkitAppearance: "none",
+    MozAppearance: "none",
   },
   icon: {
-    width: "24px",
-    height: "24px",
+    width: "1.5rem",
+    height: "1.5rem",
     display: "block",
   },
   dialogBackdrop: {
-    display: "none",
+    display: {
+      default: "none",
+      [breakpoints.mobile]: "block",
+    },
     position: "fixed",
     inset: 0,
-    zIndex: 80,
+    zIndex: zIndex["50"],
     backgroundColor: "rgba(0, 0, 0, 0.4)",
-    [MOBILE_BREAKPOINT]: {
-      display: "block",
-    },
     opacity: 1,
     transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
     ":is([data-starting-style])": {
@@ -113,21 +135,24 @@ const headerStyles = stylex.create({
     },
   },
   dialogViewport: {
-    display: "none",
+    display: {
+      default: "none",
+      [breakpoints.mobile]: "flex",
+    },
     position: "fixed",
     inset: 0,
-    zIndex: 90,
+    zIndex: zIndex["50"],
     alignItems: "flex-start",
     justifyContent: "stretch",
-    paddingTop: "72px",
-    [MOBILE_BREAKPOINT]: {
-      display: "flex",
+    paddingTop: {
+      default: "4.5rem",
+      [breakpoints.mobile]: "4.5rem",
     },
     pointerEvents: "none",
   },
   dialogPopup: {
     width: "100%",
-    height: "calc(100dvh - 72px)",
+    height: "calc(100dvh - 4.5rem)",
     backgroundColor: colors.background,
     borderBottom: `1px solid ${colors.border}`,
     padding: spacing.lg,
@@ -155,14 +180,14 @@ const headerStyles = stylex.create({
     gap: spacing.md,
   },
   mobileNavLink: {
-    color: colors.foregroundSecondary,
+    color: {
+      default: colors.foregroundSecondary,
+      ":hover": colors.foreground,
+    },
     textDecoration: "none",
-    fontSize: "16px",
+    fontSize: typography.fontSizeSM,
     padding: `${spacing.sm} 0`,
     transition: "color 0.2s ease",
-    ":hover": {
-      color: colors.foreground,
-    },
   },
 });
 

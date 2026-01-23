@@ -1,7 +1,14 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { colors, spacing, animationStyles } from "@/styles/theme.stylex";
+import {
+  colors,
+  spacing,
+  animationStyles,
+  typography,
+  container,
+  breakpoints,
+} from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const footerStyles = stylex.create({
@@ -12,9 +19,12 @@ const footerStyles = stylex.create({
     marginTop: "auto",
   },
   container: {
-    maxWidth: "1200px",
+    maxWidth: container.maxWidth,
     margin: "0 auto",
-    padding: `${spacing.xl} ${spacing.lg}`,
+    padding: {
+      default: `${spacing.xl} ${spacing.lg}`,
+      [breakpoints.mobile]: `${spacing.lg} ${spacing.md}`,
+    },
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -22,22 +32,33 @@ const footerStyles = stylex.create({
   },
   text: {
     color: colors.foregroundMuted,
-    fontSize: "14px",
+    fontSize: {
+      default: typography.fontSizeSM,
+      [breakpoints.mobile]: typography.fontSizeXS,
+    },
     textAlign: "center",
   },
   links: {
     display: "flex",
-    gap: spacing.lg,
+    gap: {
+      default: spacing.lg,
+      [breakpoints.mobile]: spacing.md,
+    },
     alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "center",
   },
   link: {
-    color: colors.foregroundMuted,
-    textDecoration: "none",
-    fontSize: "14px",
-    transition: "color 0.2s ease",
-    ":hover": {
-      color: colors.foreground,
+    color: {
+      default: colors.foregroundMuted,
+      ":hover": colors.foreground,
     },
+    textDecoration: "none",
+    fontSize: {
+      default: typography.fontSizeSM,
+      [breakpoints.mobile]: typography.fontSizeXS,
+    },
+    transition: "color 0.2s ease",
   },
 });
 

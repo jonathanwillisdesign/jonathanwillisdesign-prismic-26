@@ -6,8 +6,13 @@ import { SliceComponentProps } from "@prismicio/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { PrismicImage } from "@/components/PrismicImage";
-import { Wrapper } from "@/components/slices/Wrapper";
-import { spacing, animationStyles } from "@/styles/theme.stylex";
+import { Wrapper } from "@/components/utils/Wrapper";
+import {
+  spacing,
+  animationStyles,
+  dimensions,
+  breakpoints,
+} from "@/styles/theme.stylex";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /**
@@ -20,27 +25,39 @@ export type ImageBlockProps = SliceComponentProps<Content.ImageBlockSlice>;
  */
 const styles = stylex.create({
   root: {
-    marginTop: spacing["2xl"],
-    marginBottom: spacing["2xl"],
+    marginTop: spacing.XXL,
+    marginBottom: spacing.XXL,
   },
   single: {
     display: "grid",
     width: "100%",
     maxWidth: "100%",
-    height: "600px",
-    maxHeight: "600px",
+    height: {
+      default: dimensions.imageLarge,
+      [breakpoints.mobile]: "25rem", // Responsive height on mobile
+    },
+    maxHeight: {
+      default: dimensions.imageLarge,
+      [breakpoints.mobile]: "25rem",
+    },
     overflow: "hidden",
     position: "relative",
   },
   sideBySide: {
     display: "grid",
     gap: spacing.lg,
-    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gridTemplateColumns: {
+      default: "repeat(auto-fit, minmax(240px, 1fr))",
+      [breakpoints.mobile]: "1fr",
+    },
   },
   stacked: {
     display: "grid",
     gap: spacing.lg,
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: {
+      default: "1fr 1fr",
+      [breakpoints.mobile]: "1fr",
+    },
     width: "100%",
     maxWidth: "100%",
   },
@@ -48,8 +65,14 @@ const styles = stylex.create({
     display: "grid",
     width: "100%",
     maxWidth: "100%",
-    height: "600px",
-    maxHeight: "600px",
+    height: {
+      default: dimensions.imageLarge,
+      [breakpoints.mobile]: "25rem",
+    },
+    maxHeight: {
+      default: dimensions.imageLarge,
+      [breakpoints.mobile]: "25rem",
+    },
     overflow: "hidden",
     position: "relative",
   },

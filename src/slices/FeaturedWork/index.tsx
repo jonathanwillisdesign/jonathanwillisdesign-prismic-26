@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Content, isFilled, type LinkField } from "@prismicio/client";
 import {
   PrismicRichText,
@@ -12,15 +12,14 @@ import * as stylex from "@stylexjs/stylex";
 
 import { AnimationWrapper } from "@/components/AnimationWrapper";
 import { PrismicImage } from "@/components/PrismicImage";
-import { Wrapper } from "@/components/slices/Wrapper";
+import { Wrapper } from "@/components/utils/Wrapper";
+import { Card } from "@/components/Card";
 import {
   spacing,
-  colors,
-  typography,
-  borderRadius,
   animationStyles,
+  breakpoints,
 } from "@/styles/theme.stylex";
-import { Text } from "@/components/slices/Text";
+import { Text } from "@/components/utils/Text";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /**
@@ -49,9 +48,7 @@ const richTextComponents: JSXMapSerializer = {
   ),
   listItem: ({ children }) => (
     <li {...stylex.props(richTextStyles.listItem)}>
-      <Text.Body as="span" style={{ fontSize: 16 }}>
-        {children}
-      </Text.Body>
+      <Text.Body as="span">{children}</Text.Body>
     </li>
   ),
 };
@@ -61,56 +58,29 @@ const richTextComponents: JSXMapSerializer = {
  */
 const styles = stylex.create({
   root: {
-    marginTop: spacing["4xl"],
-    marginBottom: spacing["4xl"],
+    marginTop: spacing.XXXXL,
+    marginBottom: spacing.XXXXL,
   },
   itemsContainer: {
     display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
+    gridTemplateColumns: {
+      default: "repeat(2, 1fr)",
+      [breakpoints.mobile]: "1fr",
+    },
     gap: spacing.xl,
-    rowGap: spacing["2xl"],
-    "@media (max-width: 768px)": {
-      gridTemplateColumns: "1fr",
-      rowGap: spacing.xl,
+    rowGap: {
+      default: spacing.XXL,
+      [breakpoints.mobile]: spacing.xl,
     },
   },
-  itemWrapper: {
-    display: "flex",
-    flexDirection: "column",
+  cardWrapper: {
     cursor: "pointer",
-    gap: spacing.md,
   },
   link: {
     textDecoration: "none",
     color: "inherit",
     display: "block",
-    paddingBottom: "40px",
-  },
-  textColumn: {
-    display: "flex",
-    flexDirection: "column",
-    gap: spacing.sm,
-  },
-  title: {
-    fontSize: typography.subheadingSize,
-    fontWeight: 700,
-    margin: 0,
-    color: colors.foreground,
-    lineHeight: 1.3,
-    letterSpacing: "-0.01em",
-  },
-  description: {
-    fontSize: 16,
-    lineHeight: typography.bodyLineHeight,
-    color: colors.foregroundSecondary,
-    margin: 0,
-    maxWidth: "90%",
-  },
-  imageColumn: {
-    position: "relative",
-    width: "100%",
-    height: "360px",
-    overflow: "hidden",
+    paddingBottom: "2.5rem", // BASE_UNIT * 10 = 40px
   },
   imageOuter: {
     position: "absolute",
@@ -119,16 +89,8 @@ const styles = stylex.create({
     width: "100%",
     height: "100%",
   },
-  imageInner: {
-    position: "absolute",
-    inset: 0,
-    transition: "transform 0.5s ease",
-  },
-  imageInnerHover: {
-    transform: "scale(1.05)",
-  },
-  titleContainer: {
-    marginTop: spacing.md,
+  descriptionOverride: {
+    maxWidth: "90%",
   },
 });
 
@@ -147,7 +109,6 @@ const CardItem: FC<CardItemProps> = ({
   description,
   heroImage,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
     once: true,
     margin: "-50px",
@@ -176,24 +137,15 @@ const CardItem: FC<CardItemProps> = ({
         field={caseStudy as LinkField}
         {...stylex.props(styles.link)}
       >
-        <div
-          {...stylex.props(styles.itemWrapper)}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <Card.Root {...stylex.props(styles.cardWrapper)}>
           {isFilled.image(heroImage) && (
-            <div {...stylex.props(styles.imageColumn)}>
+            <Card.Media>
               <AnimationWrapper
                 variant="fadeInScale"
                 scrollTrigger
                 style={styles.imageOuter}
               >
-                <div
-                  {...stylex.props(
-                    styles.imageInner,
-                    isHovered && styles.imageInnerHover,
-                  )}
-                >
+                <Card.MediaContent>
                   <PrismicImage
                     field={heroImage}
                     alt={(heroImage.alt || title || "") as ""}
@@ -204,24 +156,22 @@ const CardItem: FC<CardItemProps> = ({
                       objectPosition: "center",
                     }}
                   />
-                </div>
+                </Card.MediaContent>
               </AnimationWrapper>
-            </div>
+            </Card.Media>
           )}
-          <div {...stylex.props(styles.textColumn)}>
-            {isFilled.keyText(title) && (
-              <h2 {...stylex.props(styles.title)}>{title}</h2>
-            )}
+          <Card.Body>
+            {isFilled.keyText(title) && <Card.Title>{title}</Card.Title>}
             {isFilled.richText(description) && (
-              <div {...stylex.props(styles.description)}>
+              <div {...stylex.props(styles.descriptionOverride)}>
                 <PrismicRichText
                   field={description}
                   components={richTextComponents}
                 />
               </div>
             )}
-          </div>
-        </div>
+          </Card.Body>
+        </Card.Root>
       </PrismicNextLink>
     </div>
   );

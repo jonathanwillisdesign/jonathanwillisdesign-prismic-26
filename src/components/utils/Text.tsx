@@ -1,7 +1,7 @@
 import { type ComponentPropsWithoutRef, type ElementType } from "react";
 import * as stylex from "@stylexjs/stylex";
 
-import { colors, typography } from "@/styles/theme.stylex";
+import { colors, typography, breakpoints } from "@/styles/theme.stylex";
 
 type TextProps<T extends ElementType> = {
   as?: T;
@@ -24,28 +24,37 @@ const styles = stylex.create({
     color: colors.foregroundMuted,
   },
   eyebrow: {
-    fontSize: 12,
+    fontSize: typography.fontSizeXS,
     letterSpacing: "0.2em",
     textTransform: "uppercase",
   },
   heading: {
-    fontSize: "40px",
-    lineHeight: 1.1,
+    fontSize: {
+      default: typography.fontSizeXXXXL,
+      [breakpoints.mobile]: typography.fontSizeXXXL,
+    },
+    lineHeight: typography.lineHeightTight,
     fontWeight: 600,
     letterSpacing: "-0.02em",
   },
   subheading: {
-    fontSize: typography.subheadingSize,
-    lineHeight: 1.3,
+    fontSize: {
+      default: typography.fontSizeXXXL,
+      [breakpoints.mobile]: typography.fontSizeXXL,
+    },
+    lineHeight: typography.lineHeightNormal,
     fontWeight: 600,
   },
   body: {
-    fontSize: 18,
-    lineHeight: typography.bodyLineHeight,
+    fontSize: {
+      default: typography.fontSizeLG,
+      [breakpoints.mobile]: typography.fontSizeM,
+    },
+    lineHeight: typography.lineHeightNormal,
   },
   caption: {
-    fontSize: 14,
-    lineHeight: 1.5,
+    fontSize: typography.fontSizeSM,
+    lineHeight: typography.lineHeightNormal,
   },
 });
 
