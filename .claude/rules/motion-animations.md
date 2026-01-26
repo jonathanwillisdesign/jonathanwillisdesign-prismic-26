@@ -1,0 +1,414 @@
+---
+description: Guidelines for CSS-based entrance animations using StyleX
+globs: "**/*.{tsx,ts}"
+---
+# CSS Animation Guidelines
+
+Use CSS animations via StyleX for entrance animations instead of Motion (Framer Motion). CSS animations are smoother, more performant, and don't require client components, avoiding jumpy and laggy behavior.
+
+## Core Animation Values
+
+### Duration
+- **Standard**: `0.6s` - Use for most animations
+- **Fast**: `0.4s` - Use for quick micro-interactions
+- **Slow**: `0.8s` - Use for hero images and large elements
+
+### Easing
+Always use the same easing curve for consistency:
+```css
+cubic-bezier(0.16, 1, 0.3, 1)
+```
+This creates a smooth, natural motion curve.
+
+### Delays
+- **Stagger between items**: `0.1s` increments (delay1, delay2, delay3)
+- **Sequential elements**: Use `animationStyles.delay1`, `delay2`, `delay3` for natural progression
+
+## Available Animation Styles
+
+All animation styles are exported from `@/styles/theme.stylex`:
+
+### 1. Fade Up (Most Common)
+Use for content that enters from below:
+```typescript
+import { animationStyles } from "@/styles/theme.stylex";
+
+<div {...stylex.props(animationStyles.fadeUp)}>
+  {/* content */}
+</div>
+```
+
+### 2. Fade In
+Use for simple opacity transitions:
+```typescript
+<div {...stylex.props(animationStyles.fadeIn)}>
+  {/* content */}
+</div>
+```
+
+### 3. Fade In with Scale
+Use for images and media:
+```typescript
+<div {...stylex.props(animationStyles.fadeInScale)}>
+  {/* content */}
+</div>
+```
+
+### 4. Fade In Scale Small
+Use for circular images or avatars:
+```typescript
+<div {...stylex.props(animationStyles.fadeInScaleSmall)}>
+  {/* content */}
+</div>
+```
+
+### 5. Fade Down
+Use for header elements:
+```typescript
+<div {...stylex.props(animationStyles.fadeDown)}>
+  {/* content */}
+</div>
+```
+
+## Scroll-Triggered Animations
+
+Use the `useScrollAnimation` hook for scroll-triggered animations:
+
+```typescript
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { animationStyles } from "@/styles/theme.stylex";
+
+export function MyComponent() {
+  const { ref, isVisible } = useScrollAnimation({
+    once: true,
+    margin: "-50px",
+  });
+
+  return (
+    <div
+      ref={ref}
+      {...stylex.props(
+        animationStyles.fadeUp,
+        isVisible && animationStyles.fadeUpAnimated,
+      )}
+    >
+      {/* content */}
+    </div>
+  );
+}
+```
+
+**Hook options:**
+- `once: true` - Animate only once when entering viewport (default: true)
+- `margin: "-50px"` - Trigger animation slightly before element enters viewport
+- `threshold: 0` - Percentage of element that must be visible (default: 0)
+
+## Staggered Animations
+
+For lists and grids, use delay styles:
+
+```typescript
+{items.map((item, index) => {
+  const { ref, isVisible } = useScrollAnimation({
+    once: true,
+    margin: "-50px",
+  });
+
+  const delayStyle =
+    index === 0
+      ? null
+      : index === 1
+        ? animationStyles.delay1
+        : index === 2
+          ? animationStyles.delay2
+          : animationStyles.delay3;
+
+  return (
+    <div
+      key={item.id}
+      ref={ref}
+      {...stylex.props(
+        animationStyles.fadeUp,
+        delayStyle,
+        isVisible && animationStyles.fadeUpAnimated,
+      )}
+    >
+      {item.content}
+    </div>
+  );
+})}
+```
+
+## Sequential Animations
+
+For elements that should animate in sequence:
+
+```typescript
+// First element
+<div {...stylex.props(animationStyles.fadeUp, animationStyles.delay1)}>
+  {/* content */}
+</div>
+
+// Second element
+<div {...stylex.props(animationStyles.fadeUp, animationStyles.delay2)}>
+  {/* content */}
+</div>
+
+// Third element
+<div {...stylex.props(animationStyles.fadeUp, animationStyles.delay3)}>
+  {/* content */}
+</div>
+```
+
+## Component Patterns
+
+### Server Component Pattern
+
+CSS animations work in both server and client components. For scroll-triggered animations, use client components:
+
+```typescript
+// Server Component (page.tsx)
+export default async function Page() {
+  return <AnimatedSection data={data} />;
+}
+
+// Client Component (AnimatedSection.tsx)
+"use client";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { animationStyles } from "@/styles/theme.stylex";
+
+export function AnimatedSection({ data }) {
+  const { ref, isVisible } = useScrollAnimation({
+    once: true,
+    margin: "-50px",
+  });
+
+  return (
+    <div
+      ref={ref}
+      {...stylex.props(
+        animationStyles.fadeUp,
+        isVisible && animationStyles.fadeUpAnimated,
+      )}
+    >
+      {/* content */}
+    </div>
+  );
+}
+```
+
+## Common Use Cases
+
+### Hero Sections
+```typescript
+// Title
+<div {...stylex.props(animationStyles.fadeUp, animationStyles.delay1)}>
+  <h1>Title</h1>
+</div>
+
+// Description
+<div {...stylex.props(animationStyles.fadeUp, animationStyles.delay2)}>
+  <p>Description</p>
+</div>
+
+// Image
+<div {...stylex.props(animationStyles.fadeInScale, animationStyles.delay3)}>
+  <img src="..." alt="..." />
+</div>
+```
+
+### Slice Components
+```typescript
+"use client";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { animationStyles } from "@/styles/theme.stylex";
+
+export function TextSlice({ slice }) {
+  const { ref, isVisible } = useScrollAnimation({
+    once: true,
+    margin: "-50px",
+  });
+
+  return (
+    <div
+      ref={ref}
+      {...stylex.props(
+        animationStyles.fadeUp,
+        isVisible && animationStyles.fadeUpAnimated,
+      )}
+    >
+      {/* slice content */}
+    </div>
+  );
+}
+```
+
+### Card Grids
+```typescript
+{cards.map((card, index) => {
+  const { ref, isVisible } = useScrollAnimation({
+    once: true,
+    margin: "-50px",
+  });
+
+  const delayStyle =
+    index === 0
+      ? null
+      : index === 1
+        ? animationStyles.delay1
+        : index === 2
+          ? animationStyles.delay2
+          : animationStyles.delay3;
+
+  return (
+    <div
+      key={card.id}
+      ref={ref}
+      {...stylex.props(
+        animationStyles.fadeUp,
+        delayStyle,
+        isVisible && animationStyles.fadeUpAnimated,
+      )}
+    >
+      {/* card content */}
+    </div>
+  );
+})}
+```
+
+## Accessibility
+
+CSS animations automatically respect `prefers-reduced-motion` via the animation styles:
+
+```typescript
+// Built into animationStyles - no additional code needed
+"@media (prefers-reduced-motion: reduce)": {
+  animation: "none",
+  opacity: 1,
+  transform: "none",
+}
+```
+
+## Animation Wrapper Component
+
+For reusable animations, use the `AnimationWrapper` component:
+
+```typescript
+import { AnimationWrapper } from "@/components/AnimationWrapper";
+
+<AnimationWrapper variant="fadeUp" delay={1} scrollTrigger>
+  {/* content */}
+</AnimationWrapper>
+```
+
+Available variants:
+- `fadeUp` - Fade in from below (default)
+- `fadeIn` - Simple fade in
+- `fadeInScale` - Fade in with scale (for images)
+- `fadeInScaleSmall` - Fade in with small scale (for avatars)
+
+Available delays:
+- `0` - No delay (default)
+- `1` - 0.1s delay
+- `2` - 0.2s delay
+- `3` - 0.3s delay
+
+## Do's and Don'ts
+
+### DO
+- Use CSS animations via StyleX for entrance animations
+- Use `useScrollAnimation` hook for scroll-triggered animations
+- Use consistent animation styles from `animationStyles`
+- Use delay styles (delay1, delay2, delay3) for staggered animations
+- Use `fadeUp` variant for most content
+- Use `fadeInScale` for images
+- Keep delays sequential (delay1, delay2, delay3)
+- Use `once: true` for scroll-triggered animations to avoid re-animating
+
+### DON'T
+- Don't use Motion (Framer Motion) for entrance animations
+- Don't use `"use client"` unnecessarily - CSS animations work in server components
+- Don't use random durations or easing curves
+- Don't use excessive delays (> 0.3s)
+- Don't mix different animation styles in the same section
+- Don't forget to use `useScrollAnimation` for scroll-triggered animations
+- Don't use inline styles for animations - use StyleX animation styles
+
+## Quick Reference
+
+```typescript
+// Standard fade-up animation (immediate)
+<div {...stylex.props(animationStyles.fadeUp)}>
+  {/* content */}
+</div>
+
+// Scroll-triggered animation
+const { ref, isVisible } = useScrollAnimation({
+  once: true,
+  margin: "-50px",
+});
+
+<div
+  ref={ref}
+  {...stylex.props(
+    animationStyles.fadeUp,
+    isVisible && animationStyles.fadeUpAnimated,
+  )}
+>
+  {/* content */}
+</div>
+
+// Image animation
+<div {...stylex.props(animationStyles.fadeInScale)}>
+  <img src="..." alt="..." />
+</div>
+
+// With delay
+<div {...stylex.props(animationStyles.fadeUp, animationStyles.delay1)}>
+  {/* content */}
+</div>
+```
+
+## Migration from Motion
+
+If you have existing Motion animations, convert them like this:
+
+**Before (Motion):**
+```typescript
+"use client";
+import { motion } from "motion/react";
+
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true, margin: "-50px" }}
+  transition={{
+    duration: 0.6,
+    ease: [0.16, 1, 0.3, 1],
+  }}
+>
+  {/* content */}
+</motion.div>
+```
+
+**After (CSS/StyleX):**
+```typescript
+"use client";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { animationStyles } from "@/styles/theme.stylex";
+
+const { ref, isVisible } = useScrollAnimation({
+  once: true,
+  margin: "-50px",
+});
+
+<div
+  ref={ref}
+  {...stylex.props(
+    animationStyles.fadeUp,
+    isVisible && animationStyles.fadeUpAnimated,
+  )}
+>
+  {/* content */}
+</div>
+```
