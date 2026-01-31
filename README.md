@@ -42,6 +42,14 @@ Your new page will be accessible by its URL, but it won't appear on the website 
 
 If you chose this starter when you created a new repository from the Prismic Dashboard, then your repository is preconfigured with previews on localhost. To change the preview configuration or add previews to your production or staging environments, see [Preview Drafts in Next.js](https://prismic.io/docs/technologies/preview-content-nextjs) in the Prismic documentation.
 
+### Make Prismic publishes update the deployed site
+
+In production, this site caches Prismic API responses for performance. To make content updates appear immediately after you publish in Prismic, configure a Prismic webhook to call the site’s revalidation endpoint.
+
+- **Set an env var**: `PRISMIC_WEBHOOK_SECRET` (in your hosting provider, e.g. Vercel).
+- **Create a Prismic webhook**: point it at `https://YOUR_DOMAIN/api/revalidate?secret=YOUR_SECRET`
+- **Trigger on publish**: enable events that fire when documents are published/updated.
+
 ### Customize this website
 
 This website is preconfigured with Prismic. It has three Prismic packages installed:
