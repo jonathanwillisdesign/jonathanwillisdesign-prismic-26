@@ -1,0 +1,149 @@
+---
+description: Error handling and loading patterns for Next.js pages and Prismic
+globs: src/app/**/*.{tsx,ts}, src/**/page.tsx
+alwaysApply: false
+---
+# Error and Loading Patterns
+
+Guidelines for handling Prismic fetch failures, 404s, metadata, and static params in Next.js App Router.
+
+## Prismic Fetch Failures
+
+When fetching from Prismic, use `.catch(() => notFound())` to return 404 for missing or failed content:
+
+```tsx
+import { notFound } from "next/navigation";
+
+export default async function Page({ params }: { params: Promise<Params> }) {
+  const { uid } = await params;
+  const client = createClient();
+
+  const page = await client
+    .getByUID("page", uid, { fetchLinks: [...] })
+    .catch(() => notFound());
+
+  return <SliceZone slices={page.data.slices} components={components} />;
+}
+```
+
+**Why**: Prismic throws when a document doesn't exist or the request fails. `notFound()` triggers Next.js 404 and optional `not-found.tsx` UI.
+
+## generateMetadata
+
+Export `generateMetadata` for dynamic routes so pages have correct `<title>`, `<meta>`, and Open Graph tags:
+
+```tsx
+import { Metadata } from "next";
+import { asText } from "@prismicio/client";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
+  const { uid } = await params;
+  const client = createClient();
+
+  const page = await client.getByUID("page", uid).catch(() => notFound());
+
+  return {
+    title: asText(page.data.title),
+    description: page.data.meta_description,
+    openGraph: {
+      title: page.data.meta_title ?? undefined,
+      images: page.data.meta_image?.url
+        ? [{ url: page.data.meta_image.url }]
+        : undefined,
+    },
+  };
+}
+```
+
+- Use `asText()` for `RichTextField` in title
+- Handle optional fields with `?? undefined` or conditional checks
+- Fetch only the fields needed for metadata to avoid over-fetching
+
+## generateStaticParams
+
+For static generation, export `generateStaticParams` to pre-render dynamic segments:
+
+```tsx
+import { filter } from "@prismicio/client";
+
+export async function generateStaticParams() {
+  const client = createClient();
+
+  const pages = await client.getAllByType("page", {
+    filters: [filter.not("my.page.uid", "home")],
+  });
+
+  return pages.map((page) => ({ uid: page.uid }));
+}
+```
+
+- Return array of `{ [param]: value }` objects
+- Exclude special UIDs (e.g. `home`) if they use a different route
+- Use `getAllByType` or `getAllByTag` for full lists
+
+## Params and SearchParams
+
+In App Router, `params` and `searchParams` are Promises. Await them:
+
+```tsx
+// ✅ GOOD
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ uid: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { uid } = await params;
+  const query = await searchParams;
+  // ...
+}
+```
+
+## Optional: loading.tsx
+
+Add `loading.tsx` in a route segment for instant loading UI:
+
+```
+src/app/
+  [uid]/
+    page.tsx
+    loading.tsx   ← Shown while page.tsx is loading
+```
+
+Use Suspense-compatible UI (no async data in the loading component).
+
+## Optional: error.tsx
+
+Add `error.tsx` for error boundaries:
+
+```tsx
+"use client";
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return (
+    <div>
+      <h2>Something went wrong</h2>
+      <button onClick={reset}>Try again</button>
+    </div>
+  );
+}
+```
+
+## Checklist for New Dynamic Pages
+
+- [ ] Use `.catch(() => notFound())` on Prismic fetches
+- [ ] Export `generateMetadata` with title, description, openGraph
+- [ ] Export `generateStaticParams` if the route should be statically generated
+- [ ] Await `params` and `searchParams` in handlers
+- [ ] Handle optional Prismic fields (meta_image, meta_title, etc.)
