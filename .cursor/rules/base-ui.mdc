@@ -1,0 +1,113 @@
+---
+description: Guidelines for using Base UI components
+globs: src/**/*.{tsx,ts}
+alwaysApply: false
+---
+# Base UI
+
+Use [Base UI](https://base-ui.com) (`@base-ui/react`) for accessible, unstyled primitives. The project uses Base UI for complex UI like dialogs, dropdowns, and popovers.
+
+## Why Base UI
+
+- **Accessibility**: Built-in ARIA, focus management, keyboard navigation
+- **Unstyled**: Full control over appearance via StyleX
+- **Composable**: Assemble parts (Root, Trigger, Portal, Backdrop, etc.) as needed
+
+## Dialog Pattern
+
+The project uses `Dialog` for mobile navigation. Structure:
+
+```tsx
+import { Dialog } from "@base-ui/react/dialog";
+
+<Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+  <Dialog.Trigger
+    {...stylex.props(triggerStyles)}
+    type="button"
+    aria-label={isOpen ? "Close menu" : "Open menu"}
+  >
+    {isOpen ? <CloseIcon /> : <MenuIcon />}
+  </Dialog.Trigger>
+
+  <Dialog.Portal>
+    <Dialog.Backdrop {...stylex.props(backdropStyles)} />
+    <Dialog.Viewport {...stylex.props(viewPortStyles)}>
+      <Dialog.Popup {...stylex.props(popupStyles)}>
+        {/* Content */}
+      </Dialog.Popup>
+    </Dialog.Viewport>
+  </Dialog.Portal>
+</Dialog.Root>
+```
+
+## Styling with StyleX
+
+Apply styles via `stylex.props()` on each Base UI part. Use `:is([data-starting-style])` and `:is([data-ending-style])` for enter/exit animations:
+
+```tsx
+const dialogBackdrop = stylex.create({
+  base: {
+    position: "fixed",
+    inset: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    opacity: 1,
+    transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+    ":is([data-starting-style])": {
+      opacity: 0,
+    },
+    ":is([data-ending-style])": {
+      opacity: 0,
+    },
+  },
+});
+```
+
+## Controlled vs Uncontrolled
+
+**Controlled** (project pattern for mobile menu):
+```tsx
+const [isOpen, setIsOpen] = useState(false);
+<Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+```
+
+**Uncontrolled**:
+```tsx
+<Dialog.Root>
+  {/* Manages its own state */}
+</Dialog.Root>
+```
+
+Use controlled when you need to close from content (e.g. link click) or sync with external state.
+
+## Accessibility
+
+- **Trigger**: Add `aria-label` for icon-only triggers (e.g. `"Open menu"` / `"Close menu"`)
+- **Decorative icons**: Use `aria-hidden="true"` on icons inside the trigger
+- **Focus**: Base UI handles focus trap and return; don't override unless needed
+
+## When to Use Base UI
+
+Use Base UI for:
+- Dialogs / modals
+- Dropdown menus
+- Popovers / tooltips
+- Select / combobox (when building custom selects)
+
+Use custom components for:
+- Simple buttons, links, cards
+- Layout primitives
+- Components that don't need complex a11y (focus trap, ARIA, etc.)
+
+## Do's and Don'ts
+
+### ✅ DO
+- Import from `@base-ui/react/[component]` (e.g. `@base-ui/react/dialog`)
+- Apply StyleX via `stylex.props()` on each part
+- Use `aria-label` on icon-only triggers
+- Use controlled state when closing from content
+- Use theme tokens (zIndex, colors, spacing) in Base UI styles
+
+### ❌ DON'T
+- Don't pass `style` or `className` alongside `stylex.props()` (see server-client-boundaries)
+- Don't use Base UI in Server Components (it requires client-side state)
+- Don't skip `Dialog.Portal`—it renders outside the DOM hierarchy for proper stacking

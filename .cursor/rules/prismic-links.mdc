@@ -1,0 +1,102 @@
+---
+description: Guidelines for Prismic links and navigation
+globs: src/**/*.{tsx,ts}
+alwaysApply: false
+---
+# Prismic Links
+
+Use `PrismicNextLink` for links that come from Prismic (LinkField). Use the custom `Link` component only for static/internal links not from CMS.
+
+## When to Use Each
+
+### PrismicNextLink
+Use when the link comes from Prismic content:
+- Navigation links from `LinkField[]`
+- Rich text links (paragraph links, inline links)
+- Slice links (CTAs, cards, hero buttons)
+- Content relationship links (e.g. case study links)
+
+```tsx
+import { PrismicNextLink } from "@prismicio/next";
+import { isFilled, type LinkField } from "@prismicio/client";
+
+// Navigation
+{links.map((link, index) => {
+  if (!isFilled.link(link)) return null;
+  return (
+    <PrismicNextLink
+      key={`${link.text ?? link.url ?? "link"}-${index}`}
+      field={link}
+      {...stylex.props(headerStyles.navLink)}
+    >
+      {link.text ?? ""}
+    </PrismicNextLink>
+  );
+})}
+
+// Rich text link (in JSX map serializer)
+link: ({ node, children }) => (
+  <PrismicNextLink field={node.data} {...stylex.props(linkStyles.base)}>
+    {children}
+  </PrismicNextLink>
+),
+
+// Content relationship / single link
+<PrismicNextLink field={caseStudy as LinkField}>
+  View case study
+</PrismicNextLink>
+```
+
+### Custom Link Component
+Use for static links not from Prismic:
+- Logo linking to `/`
+- Hardcoded footer links
+- Internal app routes that never come from CMS
+
+```tsx
+import { Link } from "@/components/utils/Link";
+
+<Link href="/">Home</Link>
+```
+
+## Checking Link Validity
+
+Always check `isFilled.link()` before rendering Prismic links:
+
+```tsx
+// ✅ GOOD
+if (!isFilled.link(link)) return null;
+return <PrismicNextLink field={link}>...</PrismicNextLink>;
+
+// ❌ BAD - can render broken/empty links
+return <PrismicNextLink field={link}>...</PrismicNextLink>;
+```
+
+## Applying Link Styles
+
+Use `linkStyles.base` from `@/components/utils/Link` for consistent link styling:
+
+```tsx
+import { linkStyles } from "@/components/utils/Link";
+
+<PrismicNextLink field={node.data} {...stylex.props(linkStyles.base)}>
+  {children}
+</PrismicNextLink>
+```
+
+Or define slice-specific styles that extend link behavior (hover, focus-visible).
+
+## LinkField Props
+
+Prismic `LinkField` can have:
+- `link_type`: `"Web"`, `"Document"`, `"Media"`
+- `url`: for web links
+- `text`: optional link text (for navigation)
+- Document links resolve to internal Next.js routes automatically
+
+## Key Patterns
+
+1. **Navigation**: Map over `LinkField[]`, check `isFilled.link()`, use `link.text ?? ""` for label
+2. **Rich text**: Pass `field={node.data}` to PrismicNextLink in the link serializer
+3. **Content relationships**: Cast document to `LinkField` when passing to PrismicNextLink
+4. **Keys**: Use `key` with `link.text ?? link.url ?? "link"` plus index for list stability

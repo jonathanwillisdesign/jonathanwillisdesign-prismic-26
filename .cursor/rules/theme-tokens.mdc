@@ -1,0 +1,133 @@
+---
+description: Guidelines for using design tokens from the theme system
+globs: **/*.{tsx,ts}
+alwaysApply: false
+---
+# Theme Tokens
+
+Use design tokens from `@/styles/theme.stylex` for consistent styling. Avoid hardcoded values.
+
+## Token Categories
+
+### Colors
+Import `colors` for semantic color usage:
+
+```tsx
+import { colors } from "@/styles/theme.stylex";
+
+const styles = stylex.create({
+  card: {
+    backgroundColor: colors.background,
+    color: colors.foreground,
+    borderColor: colors.border,
+  },
+  link: {
+    color: {
+      default: colors.link,
+      ":hover": colors.linkHover,
+    },
+  },
+});
+```
+
+Available: `background`, `backgroundSecondary`, `foreground`, `foregroundSecondary`, `foregroundMuted`, `accent`, `link`, `linkHover`, `border`, `borderLight`.
+
+### Spacing (4-Point System)
+The project uses a 4-point base unit (0.25rem = 4px). Use `spacing` tokens:
+
+```tsx
+import { spacing } from "@/styles/theme.stylex";
+
+const styles = stylex.create({
+  container: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    marginBottom: spacing.xl,
+  },
+});
+```
+
+Available: `xs` (4px), `sm` (8px), `md` (16px), `lg` (24px), `xl` (32px), `XXL` (48px), `XXXL` (64px), `XXXXL` (96px), `XXXXXL` (128px).
+
+### Breakpoints
+Use `breakpoints` for responsive styles. Nest inside property values:
+
+```tsx
+import { breakpoints } from "@/styles/theme.stylex";
+
+const styles = stylex.create({
+  grid: {
+    gridTemplateColumns: {
+      default: "1fr",
+      [breakpoints.tablet]: "1fr 1fr",
+      [breakpoints.desktop]: "1fr 1fr 1fr",
+    },
+    padding: {
+      default: spacing.md,
+      [breakpoints.mobile]: spacing.lg,
+    },
+  },
+});
+```
+
+Available: `mobile` (max 768px), `tablet` (769–1024px), `desktop` (1025px+).
+
+### Typography
+Use `typography` for font sizes and line heights:
+
+```tsx
+import { typography } from "@/styles/theme.stylex";
+
+const styles = stylex.create({
+  heading: {
+    fontSize: typography.fontSizeXXXXL,
+    lineHeight: typography.lineHeightTight,
+  },
+  body: {
+    fontSize: typography.fontSizeM,
+    lineHeight: typography.lineHeightNormal,
+  },
+});
+```
+
+### Other Tokens
+- **borderRadius**: `none`, `sm`, `md`, `lg`, `xl`, `full`
+- **dimensions**: `avatar`, `imageSmall`, `imageMedium`, `imageLarge`, `cardHeight`
+- **zIndex**: `"1"` through `"5"`, `"50"`, `"100"`
+- **container**: `maxWidth` for page width
+
+### Animation Styles
+Use `animationStyles` from theme (see motion-animations rule):
+
+```tsx
+import { animationStyles } from "@/styles/theme.stylex";
+
+// fadeUp, fadeIn, fadeInScale, fadeInScaleSmall, fadeDown
+// Plus *Animated variants and delay1, delay2, delay3
+```
+
+## Dark Theme
+
+Apply `darkTheme` to a container for dark mode:
+
+```tsx
+import { darkTheme } from "@/styles/theme.stylex";
+
+<div {...stylex.props(isDark && darkTheme)}>
+  {children}
+</div>
+```
+
+## Do's and Don'ts
+
+### ✅ DO
+- Import and use tokens from `@/styles/theme.stylex`
+- Use spacing tokens instead of raw pixel/rem values
+- Use breakpoints for responsive layout
+- Use colors for semantic meaning (foreground, link, etc.)
+
+### ❌ DON'T
+- Don't hardcode colors (e.g. `"#3b82f6"` instead of `colors.link`)
+- Don't hardcode spacing (e.g. `padding: 16` instead of `spacing.md`)
+- Don't hardcode breakpoints (e.g. `@media (max-width: 768px)`)
+- Don't add new tokens in component files—add to `theme.stylex.ts` if needed

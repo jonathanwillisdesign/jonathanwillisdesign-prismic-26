@@ -1,0 +1,96 @@
+---
+description: Guidelines for images and alt text with Prismic
+globs: src/**/*.{tsx,ts}
+alwaysApply: false
+---
+# Image and Alt Text
+
+Use `PrismicImage` for Prismic image fields. Handle alt text correctly for accessibility.
+
+## PrismicImage Component
+
+Import from `@/components/PrismicImage`. It provides:
+- Loading placeholder with fade-in
+- Aspect ratio from Prismic dimensions or override
+- `fillParent` for filling a sized container
+- `prefers-reduced-motion` support
+
+```tsx
+import { PrismicImage } from "@/components/PrismicImage";
+import { isFilled } from "@prismicio/client";
+
+{isFilled.image(slice.primary.image) && (
+  <PrismicImage
+    field={slice.primary.image}
+    alt={(slice.primary.image.alt || "") as ""}
+    imgixParams={{ fit: "crop" }}
+    fillParent
+    imageStyle={{
+      objectFit: "cover",
+      objectPosition: "center",
+    }}
+  />
+)}
+```
+
+## Alt Text Rules
+
+### Meaningful Images (Content, Hero, Cards)
+Pass the Prismic alt text. Use empty string fallback if CMS field is empty:
+
+```tsx
+// ✅ GOOD - Pass alt from Prismic field
+<PrismicImage
+  field={slice.primary.image}
+  alt={(slice.primary.image.alt || "") as ""}
+  ...
+/>
+```
+
+**Note**: `PrismicImage` strips duplicate alt when the prop is provided—it uses the prop for the visible `alt` attribute. Pass `field.alt` so editors control accessibility.
+
+### Decorative Images
+If an image is purely decorative (doesn't convey information), use empty alt:
+
+```tsx
+<PrismicImage
+  field={slice.primary.image}
+  alt=""
+  ...
+/>
+```
+
+### When to Use Meaningful vs Decorative
+- **Meaningful**: Hero images, product images, team photos, screenshots, diagrams, images that add context
+- **Decorative**: Background patterns, purely aesthetic imagery, redundant with adjacent text
+
+## PrismicImage Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `field` | ImageField | Prismic image field |
+| `alt` | string | Alt text (use `field.alt \|\| ""` for meaningful images) |
+| `fillParent` | boolean | Wrapper fills parent (use when parent has fixed size) |
+| `aspectRatio` | string | Override e.g. `"16 / 9"` |
+| `imgixParams` | object | Imgix params e.g. `{ fit: "crop" }` |
+| `imageStyle` | CSSProperties | Styles for the img element |
+| `wrapperStyle` | CSSProperties | Styles for the wrapper div |
+
+## When to Use PrismicNextImage Directly
+
+Use raw `PrismicNextImage` only when you need behavior `PrismicImage` doesn't support (e.g. no wrapper, no placeholder). Prefer `PrismicImage` for consistency.
+
+## Do's and Don'ts
+
+### ✅ DO
+- Use `PrismicImage` for Prismic image fields
+- Pass `field.alt` for meaningful images
+- Use `alt=""` for decorative images
+- Check `isFilled.image(field)` before rendering
+- Use `fillParent` when the parent defines size (e.g. fixed height container)
+- Use `imgixParams` for cropping/fitting
+
+### ❌ DON'T
+- Don't omit alt for meaningful images
+- Don't use redundant alt that repeats adjacent text
+- Don't use `alt="image"` or `alt="picture"` as placeholder
